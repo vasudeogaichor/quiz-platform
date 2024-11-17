@@ -35,22 +35,22 @@ const ALLOWED_GRADES = ["7", "8", "9", "10"];
 
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("login");
-  console.log("activeTab - ", activeTab);
+  // console.log("activeTab - ", activeTab);
   const [loginData, setLoginData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
-  console.log("loginData - ", loginData);
+  // console.log("loginData - ", loginData);
   const [signupData, setSignupData] = useState<SignupFormData>({
     email: "",
     password: "",
     fullName: "",
     grade: "",
   });
-  console.log("signupData - ", signupData);
+  // console.log("signupData - ", signupData);
 
   const [errors, setErrors] = useState<Errors>({});
-  console.log("errors - ", errors);
+  // console.log("errors - ", errors);
   const validateLoginData = (loginData: LoginFormData) => {
     const newErrors: Errors = {};
     if (!loginData.email) {
@@ -75,7 +75,7 @@ export default function LoginPage() {
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login data submitted:", loginData);
+    // console.log("Login data submitted:", loginData);
     const validationErrors = validateLoginData(loginData);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -121,7 +121,7 @@ export default function LoginPage() {
 
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signup data submitted:", signupData);
+    // console.log("Signup data submitted:", signupData);
 
     const validationErrors = validateSignupData(signupData);
     if (Object.keys(validationErrors).length > 0) {
@@ -157,11 +157,11 @@ export default function LoginPage() {
           <TabsContent value="login">
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                {/* <Label htmlFor="email">Email</Label> */}
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="Email"
                   value={loginData.email}
                   onChange={(e) =>
                     setLoginData({ ...loginData, email: e.target.value })
@@ -173,18 +173,19 @@ export default function LoginPage() {
                 )}
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
+                {/* <div className="flex items-center"> */}
+                  {/* <Label htmlFor="password">Password</Label> */}
+                  {/* <a
                     href="#"
                     className="ml-auto inline-block text-sm underline"
                   >
                     Forgot your password?
-                  </a>
-                </div>
+                  </a> */}
+                {/* </div> */}
                 <Input
                   id="password"
                   type="password"
+                  placeholder="password"
                   required
                   value={loginData.password}
                   onChange={(e) =>
@@ -253,6 +254,7 @@ export default function LoginPage() {
               {errors.password && (
                 <p className="text-red-500 text-sm">{errors.password}</p>
               )}
+              {/* TODO: ADD DROPDOWN COMPONENT FROM SHADCN */}
               <select
                 className="w-full p-2 border rounded"
                 value={signupData.grade}
