@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+import GoogleSignIn from "./GoogleSignIn";
 
 interface LoginFormData {
   email: string;
@@ -203,13 +204,14 @@ export default function LoginPage() {
               >
                 Login
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 className="w-full"
                 onClick={handleGoogleLogin}
               >
                 Login with Google
-              </Button>
+              </Button> */}
+              <GoogleSignIn />
             </div>
             {/* <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
