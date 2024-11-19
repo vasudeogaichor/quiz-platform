@@ -5,7 +5,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   googleId?: string;
-  name?: string;
+  fullName?: string;
   grade: 7 | 8 | 9 | 10;
   createdAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -26,7 +26,7 @@ const userSchema = new Schema<IUser>({
     }
   },
   googleId: String,
-  name: String,
+  fullName: String,
   grade: {
     type: Number,
     required: true,
