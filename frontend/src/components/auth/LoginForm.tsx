@@ -9,9 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import GoogleSignIn from "./GoogleSignIn";
+import { signup } from "@/api";
+import { useToast } from "@/hooks/useToast";
 
 interface LoginFormData {
   email: string;
@@ -22,7 +23,7 @@ interface SignupFormData extends LoginFormData {
   fullName: string;
   email: string;
   password: string;
-  grade: string;
+  grade: number;
 }
 
 interface Errors {
@@ -32,9 +33,10 @@ interface Errors {
   fullName?: string;
 }
 
-const ALLOWED_GRADES = ["7", "8", "9", "10"];
+const ALLOWED_GRADES = [7, 8, 9, 10];
 
 export default function LoginPage() {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("login");
   // console.log("activeTab - ", activeTab);
   const [loginData, setLoginData] = useState<LoginFormData>({
@@ -46,7 +48,7 @@ export default function LoginPage() {
     email: "",
     password: "",
     fullName: "",
-    grade: "",
+    grade: 0,
   });
   // console.log("signupData - ", signupData);
 
@@ -120,7 +122,7 @@ export default function LoginPage() {
     return newErrors;
   };
 
-  const handleSignupSubmit = (e: React.FormEvent) => {
+  const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // console.log("Signup data submitted:", signupData);
 
@@ -129,7 +131,17 @@ export default function LoginPage() {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      alert("Form submitted successfully!");
+      try {
+        const response = await signup(signupData);
+        console.log('response - ', response)
+      } catch (e) {
+        console.log('e - ', e)
+        toast({
+          variant: "destructive",
+          title: "Network Error",
+          description: "No response received from server. Check your internet connection."
+        });
+      }
     }
   };
 
@@ -175,8 +187,8 @@ export default function LoginPage() {
               </div>
               <div className="grid gap-2">
                 {/* <div className="flex items-center"> */}
-                  {/* <Label htmlFor="password">Password</Label> */}
-                  {/* <a
+                {/* <Label htmlFor="password">Password</Label> */}
+                {/* <a
                     href="#"
                     className="ml-auto inline-block text-sm underline"
                   >
@@ -261,7 +273,7 @@ export default function LoginPage() {
                 className="w-full p-2 border rounded"
                 value={signupData.grade}
                 onChange={(e) =>
-                  setSignupData({ ...signupData, grade: e.target.value })
+                  setSignupData({ ...signupData, grade: parseInt(e.target.value) })
                 }
               >
                 <option value="">Select Grade</option>
