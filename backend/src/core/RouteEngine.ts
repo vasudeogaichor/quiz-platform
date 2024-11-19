@@ -43,7 +43,6 @@ export default class RouteEngine {
           Router,
           "get" | "post" | "put" | "delete" | "options" | "head"
         >;
-
         this.router[httpMethod](
           `/${prefix}${routePath}`,
           ...middleware,
@@ -54,10 +53,10 @@ export default class RouteEngine {
     return this.router;
   }
 
-  private wrapHandler(handler: (req: Request) => Promise<any>) {
+  private wrapHandler(handler: (req: Request, res: Response) => Promise<any>) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const result = await handler(req);
+        const result = await handler(req, res);
         res.json(result);
       } catch (error) {
         next(error);

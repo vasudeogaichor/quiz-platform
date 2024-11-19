@@ -12,21 +12,26 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
-  if (err instanceof AppError) {
-    res.status(err.statusCode).json(AppResponse.error(err.message, err.errors));
-  } else {
-    console.error(err);
-    res.status(500).json(AppResponse.error("Internal server error"));
-  }
-});
+app.use(express.urlencoded({ extended: true }));
 
 const routeEngine = new RouteEngine(routes);
 
 routeEngine.initialize().then((router) => {
   app.use("/api", router);
-});
+
+  app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
+    if (err instanceof AppError) {
+      res.status(err.statusCode).json(AppResponse.error(err.message, err.errors));
+    } else {
+      console.error(err);
+      res.status(500).json(AppResponse.error("Internal server error"));
+    }
+  });
+}).catch((err) => {
+  console.error("Error during route initialization:", err);
+});;
+
+
 
 // Connect to MongoDB
 mongoose
