@@ -25,12 +25,12 @@ const Sidebar: React.FC = () => {
       path: '/quiz',
       active: location.pathname === '/quiz'
     },
-    {
-      icon: Trophy,
-      label: 'Achievements',
-      path: '/achievements',
-      active: location.pathname === '/achievements'
-    },
+    // {
+    //   icon: Trophy,
+    //   label: 'Achievements',
+    //   path: '/achievements',
+    //   active: location.pathname === '/achievements'
+    // },
     {
       icon: Settings,
       label: 'Settings',
