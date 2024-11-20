@@ -39,7 +39,9 @@ export default class AuthController {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
-    return res.json(Response.success({ token, user }));
+    return res.json(
+      Response.success({ token, user: toUserDTO(user.toObject()) })
+    );
   }
 
   static async signup(
@@ -55,7 +57,9 @@ export default class AuthController {
     const user = await User.create({ email, password, fullName, grade });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
 
-    return res.json(Response.success({ token, user: toUserDTO(user.toObject())}));
+    return res.json(
+      Response.success({ token, user: toUserDTO(user.toObject()) })
+    );
   }
 
   static async googleAuth(
