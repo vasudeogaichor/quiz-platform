@@ -53,20 +53,9 @@ export default class AuthController {
     }
 
     const user = await User.create({ email, password, fullName, grade });
-    console.log('user - ', user)
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
-    // console.log('token - ', token)
 
-    // TODO: Figure out headers being sent twice after using toUserDTO
-    let userRes = {
-      id: user._id.toString(),
-      email: user.email,
-      fullName: user.fullName,
-      grade: user.grade,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    }
-    return res.json(Response.success({ token, user: userRes/*toUserDTO(user.toObject())*/}));
+    return res.json(Response.success({ token, user: toUserDTO(user.toObject())}));
   }
 
   static async googleAuth(
