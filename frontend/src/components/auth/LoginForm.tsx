@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import GoogleSignIn from "./GoogleSignIn";
-import { useToast } from "@/hooks/useToast";
 import { LoginFormData, SignupFormData } from "@/types/auth";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -26,8 +25,7 @@ interface Errors {
 const ALLOWED_GRADES = [7, 8, 9, 10];
 
 export default function LoginPage() {
-  const { toast } = useToast();
-  const { signup } = useAuth();
+  const { signup, login } = useAuth();
   const [activeTab, setActiveTab] = useState("login");
   // console.log("activeTab - ", activeTab);
   const [loginData, setLoginData] = useState<LoginFormData>({
@@ -67,7 +65,7 @@ export default function LoginPage() {
     return newErrors;
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // console.log("Login data submitted:", loginData);
     const validationErrors = validateLoginData(loginData);
@@ -75,7 +73,7 @@ export default function LoginPage() {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      alert("Form submitted successfully!");
+      await login(loginData.email, loginData.password);
     }
   };
 
@@ -124,13 +122,6 @@ export default function LoginPage() {
       setErrors({});
       await signup(signupData);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-
-    // Add logic to integrate with Google OAuth here
-    alert("Google Login Clicked! Redirecting to Google login...");
   };
 
   return (

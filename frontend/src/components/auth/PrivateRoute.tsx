@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth'
 const PrivateRoute: React.FC = () => {
     // Use a custom auth hook to check authentication status
     const { isAuthenticated, isLoading } = useAuth();
-    console.log('isAuthenticated - ', isAuthenticated)
+    // console.log('isAuthenticated - ', isAuthenticated)
 
     // If still loading, show a loading spinner
     if (isLoading) {

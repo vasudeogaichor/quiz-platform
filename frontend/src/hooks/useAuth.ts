@@ -1,6 +1,6 @@
 import { SignupFormData } from "@/types/auth";
 import { useState, useEffect } from "react";
-import { signupUser } from "@/api";
+import { loginUser, signupUser, signupUserWithGoogle } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "./useToast";
 
@@ -11,6 +11,7 @@ interface AuthHook {
   logout: () => void;
   user: User | null;
   signup: (signupData: SignupFormData) => Promise<void>;
+  signupWithGoogle: (cred: string) => Promise<void>;
 }
 
 interface User {
@@ -33,7 +34,7 @@ export const useAuth = (): AuthHook => {
       try {
         // TODO: Replace with actual token validation
         const token = localStorage.getItem("authToken");
-        console.log("token - ", token);
+        // console.log("token - ", token);
         if (token) {
           setIsAuthenticated(true);
           return;
@@ -68,21 +69,19 @@ export const useAuth = (): AuthHook => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const { token, user } = await response.json();
+      const response = await loginUser(email, password);
+      if (response.success) {
+        const { token, user } = response.data;
         localStorage.setItem("authToken", token);
         setUser(user);
         setIsAuthenticated(true);
+        navigate("/");
       } else {
-        throw new Error("Login failed");
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: "Something went wrong",
+        });
       }
     } catch (error) {
       console.error("Login error", error);
@@ -93,6 +92,34 @@ export const useAuth = (): AuthHook => {
   const signup = async (signupData: SignupFormData) => {
     try {
       const response = await signupUser(signupData);
+      if (response.success) {
+        const { token, user } = response.data;
+        localStorage.setItem("authToken", token);
+        setUser(user);
+        setIsAuthenticated(true);
+        navigate("/");
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Signup failed",
+          description: response.data.message || "Something went wrong",
+        });
+        // throw new Error("Signup failed");
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Signup failed",
+        description: "Something went wrong",
+      });
+    }
+  };
+
+  const signupWithGoogle = async (credential: string) => {
+    // console.log('credential - ', credential)
+    try {
+      const response = await signupUserWithGoogle(credential);
+      // console.log('response - ', response)
       if (response.success) {
         const { token, user } = response.data;
         localStorage.setItem("authToken", token);
@@ -129,5 +156,6 @@ export const useAuth = (): AuthHook => {
     logout,
     user,
     signup,
+    signupWithGoogle,
   };
 };
