@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>({
   fullName: String,
   grade: {
     type: Number,
-    required: true,
+    // required: true,
     enum: [7, 8, 9, 10]
   },
   createdAt: {

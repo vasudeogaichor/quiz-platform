@@ -3,6 +3,9 @@ import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { AppError, Response } from "../core";
 import { toUserDTO } from "../utils";
+import { OAuth2Client } from "google-auth-library";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 interface LoginRequest extends Request {
   body: {
@@ -22,7 +25,7 @@ interface SignupRequest extends Request {
 
 interface GoogleAuthRequest extends Request {
   body: {
-    token: string;
+    credential: string;
   };
 }
 
@@ -66,9 +69,33 @@ export default class AuthController {
     req: GoogleAuthRequest,
     res: ExpressResponse
   ): Promise<ExpressResponse> {
-    const { token } = req.body;
-    // Verify token with Google OAuth
-    // Implementation depends on Google OAuth library
-    return res.json(Response.success({ token }));
+    const { credential } = req.body;
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID, // Ensure this matches your client ID
+    });
+
+    const payload = ticket.getPayload();
+    console.log("payload - ", payload);
+    if (!payload) {
+      throw AppError.badRequest("Failed to sign in with google!");
+    }
+
+    const { email, name: fullName, sub: googleId } = payload;
+
+    let user = await User.findOne({ googleId });
+    if (!user) {
+      user = await User.create({
+        email,
+        fullName,
+        googleId,
+      });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
+
+    return res.json(
+      Response.success({ token, user: toUserDTO(user.toObject()) })
+    );
   }
 }
