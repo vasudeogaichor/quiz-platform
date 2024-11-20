@@ -2,6 +2,7 @@ import { Request, Response as ExpressResponse } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { AppError, Response } from "../core";
+import { toUserDTO } from "../utils";
 
 interface LoginRequest extends Request {
   body: {
@@ -14,7 +15,7 @@ interface SignupRequest extends Request {
   body: {
     email: string;
     password: string;
-    name: string;
+    fullName: string;
     grade: number;
   };
 }
@@ -45,16 +46,27 @@ export default class AuthController {
     req: SignupRequest,
     res: ExpressResponse
   ): Promise<ExpressResponse> {
-    const { email, password, name, grade } = req.body;
+    const { email, password, fullName, grade } = req.body;
 
     if (await User.findOne({ email })) {
       throw AppError.badRequest("Email already exists");
     }
 
-    const user = await User.create({ email, password, name, grade });
+    const user = await User.create({ email, password, fullName, grade });
+    console.log('user - ', user)
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
+    console.log('token - ', token)
 
-    return res.json(Response.success({ token, user }));
+    // TODO: Figure out headers being sent twice after using toUserDTO
+    let userRes = {
+      id: user._id.toString(),
+      email: user.email,
+      fullName: user.fullName,
+      grade: user.grade,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }
+    return res.json(Response.success({ token, user: userRes/*toUserDTO(user.toObject())*/}));
   }
 
   static async googleAuth(
