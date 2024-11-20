@@ -6,13 +6,13 @@ export const routes: Routes = {
       handler: 'AuthController.login',
       middleware: ['validateLoginInput'],
     },
-    // 'POST /signup': {
-    //   handler: 'AuthController.signup',
-    //   middleware: ['validateSignupInput'],
-    // },
-    // 'POST /google-auth': {
-    //   handler: 'AuthController.googleAuth',
-    // },
+    'POST /signup': {
+      handler: 'AuthController.signup',
+      middleware: ['validateSignupInput'],
+    },
+    'POST /google-auth': {
+      handler: 'AuthController.googleAuth',
+    },
   },
   // quiz: {
   //   'GET /questions': {
