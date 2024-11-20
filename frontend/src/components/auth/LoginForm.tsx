@@ -11,20 +11,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import GoogleSignIn from "./GoogleSignIn";
-import { signup } from "@/api";
 import { useToast } from "@/hooks/useToast";
+import { LoginFormData, SignupFormData } from "@/types/auth";
+import { useAuth } from "@/hooks/useAuth";
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-interface SignupFormData extends LoginFormData {
-  fullName: string;
-  email: string;
-  password: string;
-  grade: number;
-}
 
 interface Errors {
   email?: string;
@@ -37,6 +27,7 @@ const ALLOWED_GRADES = [7, 8, 9, 10];
 
 export default function LoginPage() {
   const { toast } = useToast();
+  const { signup } = useAuth();
   const [activeTab, setActiveTab] = useState("login");
   // console.log("activeTab - ", activeTab);
   const [loginData, setLoginData] = useState<LoginFormData>({
@@ -131,17 +122,7 @@ export default function LoginPage() {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      try {
-        const response = await signup(signupData);
-        console.log('response - ', response)
-      } catch (e) {
-        console.log('e - ', e)
-        toast({
-          variant: "destructive",
-          title: "Network Error",
-          description: "No response received from server. Check your internet connection."
-        });
-      }
+      await signup(signupData);
     }
   };
 

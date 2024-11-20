@@ -1,11 +1,17 @@
-import apiClient from '@/api/axiosInstance';
+import apiClient from "@/api/axiosInstance";
+import { ApiResponse } from "@/types/api";
 
-export const login = async (email: string, password: string) => {
-  const response = await apiClient.post('/api/auth/login', { email, password });
+export const loginUser = async (email: string, password: string) => {
+  const response = await apiClient.post("/api/auth/login", { email, password });
   return response.data;
 };
 
-export const signup = async (userData: { fullName: string; email: string; password: string, grade: number }) => {
-  const response = await apiClient.post('/api/auth/signup', userData);
+export const signupUser = async (userData: {
+  fullName: string;
+  email: string;
+  password: string;
+  grade: number;
+}): Promise<ApiResponse> => {
+  const response = await apiClient.post<ApiResponse>("/api/auth/signup", userData);
   return response.data;
 };
