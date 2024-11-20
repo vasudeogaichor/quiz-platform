@@ -2,22 +2,16 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "../core";
 import validator from "validator";
 import User from "../models/User";
+import { SignupInput } from "../types/middlewares";
 
 const VALID_GRADES = [7, 8, 9, 10];
-
-interface SignupInput {
-  email: string;
-  password: string;
-  name: string;
-  grade: number;
-}
 
 export default async function validateSignupInput(
   req: Request<{}, {}, SignupInput>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { email, password, name, grade } = req.body;
+  const { email, password, fullName, grade } = req.body;
   const errors: string[] = [];
 
   // Email validation
@@ -56,9 +50,9 @@ export default async function validateSignupInput(
   }
 
   // Name validation
-  if (!name) {
+  if (!fullName) {
     errors.push("Name is required");
-  } else if (name.length < 2) {
+  } else if (fullName.length < 2) {
     errors.push("Name must be at least 2 characters long");
   }
 
