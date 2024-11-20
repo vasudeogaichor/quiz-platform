@@ -35,7 +35,10 @@ export default class RouteEngine {
         const handler = await this.loadController(config.handler);
         const middleware = config.middleware
           ? await Promise.all(
-              config.middleware.map((m) => this.loadMiddleware(m))
+              // config.middleware.map((m) => this.loadMiddleware(m))
+              config.middleware.map(async (m) =>
+                this.wrapMiddleware(await this.loadMiddleware(m))
+              )
             )
           : [];
 
@@ -53,12 +56,28 @@ export default class RouteEngine {
     return this.router;
   }
 
-  private wrapHandler(handler: (req: Request, res: Response) => Promise<any>) {
+  private wrapMiddleware(
+    middleware: (req: Request, res: Response, next: NextFunction) => any
+  ): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const result = await handler(req, res);
+        await middleware(req, res, next);
+      } catch (error) {
+        console.log("Middleware error:", error);
+        next(error);
+      }
+    };
+  }
+
+  private wrapHandler(
+    handler: (req: Request, res: Response, next: NextFunction) => Promise<any>
+  ) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const result = await handler(req, res, next);
         res.json(result);
       } catch (error) {
+        console.log("error - ", error);
         next(error);
       }
     };
