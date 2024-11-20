@@ -93,12 +93,12 @@ export const useAuth = (): AuthHook => {
   const signup = async (signupData: SignupFormData) => {
     try {
       const response = await signupUser(signupData);
-      if (response.data.success) {
+      if (response.success) {
         const { token, user } = response.data;
         localStorage.setItem("authToken", token);
         setUser(user);
         setIsAuthenticated(true);
-        navigate("/results");
+        navigate("/");
       } else {
         toast({
           variant: "destructive",

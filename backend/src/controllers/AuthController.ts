@@ -55,7 +55,7 @@ export default class AuthController {
     const user = await User.create({ email, password, fullName, grade });
     console.log('user - ', user)
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
-    console.log('token - ', token)
+    // console.log('token - ', token)
 
     // TODO: Figure out headers being sent twice after using toUserDTO
     let userRes = {
