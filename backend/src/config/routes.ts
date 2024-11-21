@@ -28,14 +28,14 @@ export const routes: Routes = {
   //     middleware: ['auth'],
   //   },
   // },
-  // user: {
-  //   'GET /profile': {
-  //     handler: 'UserController.getProfile',
-  //     middleware: ['auth'],
-  //   },
-  //   'PUT /profile': {
-  //     handler: 'UserController.updateProfile',
-  //     middleware: ['auth', 'validateProfileInput'],
-  //   },
-  // },
+  user: {
+    'GET /profile': { 
+      handler: 'UserController.getProfile',
+      middleware: ['auth'],
+    },
+    'PUT /profile': {
+      handler: 'UserController.updateProfile',
+      middleware: ['auth', 'validateProfileInput'],
+    },
+  },
 };

@@ -22,6 +22,7 @@ export default class UserController {
     res: ExpressResponse
   ): Promise<Response> {
     const user = await User.findById(req.user.id).select("-password");
+    // console.log('user - ', user)
     if (!user) throw AppError.notFound("User not found");
 
     // Get quiz statistics
@@ -59,27 +60,27 @@ export default class UserController {
     });
   }
 
-  // static async updateProfile(req: Request, res: ExpressResponse): Promise<Response> {
-  //   const allowedUpdates = ['name', 'grade'];
-  //   const updates = Object.keys(req.body)
-  //     .filter(key => allowedUpdates.includes(key))
-  //     .reduce((obj: { [key: string]: any }, key: string) => {
-  //       obj[key] = req.body[key];
-  //       return obj;
-  //     }, {});
+  static async updateProfile(req: Request, res: ExpressResponse): Promise<Response> {
+    const allowedUpdates = ['fullName', 'grade'];
+    const updates = Object.keys(req.body)
+      .filter(key => allowedUpdates.includes(key))
+      .reduce((obj: { [key: string]: any }, key: string) => {
+        obj[key] = req.body[key];
+        return obj;
+      }, {});
 
-  //   if (Object.keys(updates).length === 0) {
-  //     throw AppError.badRequest('No valid updates provided');
-  //   }
+    if (Object.keys(updates).length === 0) {
+      throw AppError.badRequest('No valid updates provided');
+    }
 
-  //   const user = await User.findByIdAndUpdate(
-  //     req.user.id,
-  //     updates,
-  //     { new: true, runValidators: true }
-  //   ).select('-password');
+    const user = await User.findByIdAndUpdate(
+      req?.user?.id,
+      updates,
+      { new: true, runValidators: true }
+    ).select('-password');
 
-  //   return Response.success(user);
-  // }
+    return Response.success(user);
+  }
 
   // static async getPerformanceAnalytics(req: AuthenticatedRequest, res: ExpressResponse): Promise<Response> {
   //   const timeframe: string = req.query.timeframe?.toString() || '30days';
