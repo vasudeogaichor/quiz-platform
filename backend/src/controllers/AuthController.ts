@@ -1,8 +1,7 @@
 import { Request, Response as ExpressResponse } from "express";
-import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { AppError, Response } from "../core";
-import { toUserDTO } from "../utils";
+import { generateAuthToken, toUserDTO } from "../utils";
 import { OAuth2Client } from "google-auth-library";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -41,7 +40,7 @@ export default class AuthController {
       throw AppError.unauthorized("Invalid credentials");
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
+    const token = generateAuthToken(user);
     return res.json(
       Response.success({ token, user: toUserDTO(user.toObject()) })
     );
@@ -58,7 +57,7 @@ export default class AuthController {
     }
 
     const user = await User.create({ email, password, fullName, grade });
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
+    const token = generateAuthToken(user);
 
     return res.json(
       Response.success({ token, user: toUserDTO(user.toObject()) })
@@ -72,11 +71,10 @@ export default class AuthController {
     const { credential } = req.body;
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID, // Ensure this matches your client ID
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    console.log("payload - ", payload);
     if (!payload) {
       throw AppError.badRequest("Failed to sign in with google!");
     }
@@ -91,8 +89,7 @@ export default class AuthController {
         googleId,
       });
     }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
+    const token = generateAuthToken(user);
 
     return res.json(
       Response.success({ token, user: toUserDTO(user.toObject()) })
