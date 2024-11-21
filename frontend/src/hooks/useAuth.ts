@@ -16,7 +16,7 @@ interface AuthHook {
 
 interface User {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
   grade: number;
 }
@@ -147,6 +147,7 @@ export const useAuth = (): AuthHook => {
     localStorage.removeItem("authToken");
     setIsAuthenticated(false);
     setUser(null);
+    navigate("/login");
   };
 
   return {

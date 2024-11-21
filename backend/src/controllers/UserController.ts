@@ -1,10 +1,10 @@
 // src/controllers/UserController.ts
-import { Request, Response as ExpressResponse } from 'express';
-import User from '../models/User';
-import QuizAttempt from '../models/QuizAttempt';
-import { AppError, Response } from '../core/index';
-import { IQuizAttempt } from '../models/QuizAttempt';
-import { AuthenticatedRequest } from '../types/controllers';
+import { Request, Response as ExpressResponse } from "express";
+import User from "../models/User";
+import QuizAttempt from "../models/QuizAttempt";
+import { AppError, Response } from "../core/index";
+import { IQuizAttempt } from "../models/QuizAttempt";
+import { AuthenticatedRequest } from "../types/controllers";
 
 interface IQuizStats {
   totalQuizzes: number;
@@ -17,29 +17,36 @@ interface ITopicMastery {
 }
 
 export default class UserController {
-  static async getProfile(req: AuthenticatedRequest, res: ExpressResponse): Promise<Response> {
-    const user = await User.findById(req.user.id).select('-password');
-    if (!user) throw AppError.notFound('User not found');
+  static async getProfile(
+    req: AuthenticatedRequest,
+    res: ExpressResponse
+  ): Promise<Response> {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) throw AppError.notFound("User not found");
 
     // Get quiz statistics
     const quizStats: IQuizStats[] = await QuizAttempt.aggregate([
       { $match: { user: user._id, completedAt: { $ne: null } } },
-      { $group: {
-        _id: null,
-        totalQuizzes: { $sum: 1 },
-        averageScore: { $avg: '$score' },
-        topScore: { $max: '$score' }
-      }}
+      {
+        $group: {
+          _id: null,
+          totalQuizzes: { $sum: 1 },
+          averageScore: { $avg: "$score" },
+          topScore: { $max: "$score" },
+        },
+      },
     ]);
 
     // Get topic mastery levels
     const topicMastery = await QuizAttempt.aggregate([
       { $match: { user: user._id, completedAt: { $ne: null } } },
-      { $unwind: '$topicPerformance' },
-      { $group: {
-        _id: '$topicPerformance.topic',
-        averageScore: { $avg: '$topicPerformance.score' }
-      }}
+      { $unwind: "$topicPerformance" },
+      {
+        $group: {
+          _id: "$topicPerformance.topic",
+          averageScore: { $avg: "$topicPerformance.score" },
+        },
+      },
     ]);
 
     return Response.success({
@@ -48,7 +55,7 @@ export default class UserController {
       topicMastery: topicMastery.reduce((acc: ITopicMastery, topic: any) => {
         acc[topic._id] = topic.averageScore;
         return acc;
-      }, {})
+      }, {}),
     });
   }
 
