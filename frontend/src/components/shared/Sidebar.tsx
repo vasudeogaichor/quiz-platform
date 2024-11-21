@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
-  Trophy,
+  // Trophy,
   Settings,
   LogOut,
 } from "lucide-react";

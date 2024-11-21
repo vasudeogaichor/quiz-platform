@@ -1,15 +1,15 @@
 import React from 'react'
-import { BellRing, User } from 'lucide-react'
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+// import { BellRing, User } from 'lucide-react'
+// import { 
+//   DropdownMenu, 
+//   DropdownMenuContent, 
+//   DropdownMenuItem, 
+//   DropdownMenuLabel, 
+//   DropdownMenuSeparator, 
+//   DropdownMenuTrigger 
+// } from '@/components/ui/dropdown-menu'
+// import { Button } from '@/components/ui/button'
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const Navbar: React.FC = () => {
   return (

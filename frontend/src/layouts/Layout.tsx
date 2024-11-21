@@ -13,7 +13,7 @@ const Layout: React.FC = () => {
   let gradeUpdated = user?.grade;
   const [gradeError, setGradeError] = useState<string>();
   const [grade, setGrade] = useState<number>();
-  console.log('grade - ', grade)
+  // console.log('grade - ', grade)
 
   const handleGradeUpdate = () => {
     if (!grade || !ALLOWED_GRADES.includes(grade)) {
@@ -49,7 +49,7 @@ const Layout: React.FC = () => {
                 }
               >
                 <option value="">Select Grade</option>
-                {[7, 8, 9, 10, 11].map((grade) => (
+                {ALLOWED_GRADES.map((grade) => (
                   <option key={grade} value={grade}>
                     Grade {grade}
                   </option>
