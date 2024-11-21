@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import GoogleSignIn from "./GoogleSignIn";
 import { LoginFormData, SignupFormData } from "@/types/auth";
 import { useAuth } from "@/hooks/useAuth";
+import { ALLOWED_GRADES } from "@/constants/auth";
 
 
 interface Errors {
@@ -21,8 +22,6 @@ interface Errors {
   grade?: string;
   fullName?: string;
 }
-
-const ALLOWED_GRADES = [7, 8, 9, 10];
 
 export default function LoginPage() {
   const { signup, login } = useAuth();

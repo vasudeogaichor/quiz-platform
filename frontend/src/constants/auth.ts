@@ -1,0 +1,1 @@
+export const ALLOWED_GRADES = [7, 8, 9, 10];
