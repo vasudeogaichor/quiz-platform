@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button'
 
 const Sidebar: React.FC = () => {
+  console.log('sidebar loaded ')
   const location = useLocation()
 
   const menuItems = [
@@ -62,10 +63,19 @@ const Sidebar: React.FC = () => {
               <item.icon className="mr-3 h-5 w-5" />
               <span>{item.label}</span>
             </Link>
+            
           ))}
+          <Button
+            variant="destructive"
+            className="w-full"
+            onClick={handleLogout}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
         </nav>
-
-        {/* <div className="absolute bottom-0 left-0 right-0 p-6">
+{/* 
+        <div className="absolute bottom-0 left-0 right-0 p-6">
           <Button
             variant="destructive"
             className="w-full"
