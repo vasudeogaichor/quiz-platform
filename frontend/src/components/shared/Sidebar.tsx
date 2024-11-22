@@ -41,10 +41,10 @@ const Sidebar: React.FC = () => {
     },
   ];
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     // Implement logout logic
     console.log("Logging out");
-    await logout();
+    logout();
   };
 
   return (
