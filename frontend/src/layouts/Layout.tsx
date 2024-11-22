@@ -3,9 +3,17 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/shared/Sidebar";
 import Navbar from "@/components/shared/Navbar";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ALLOWED_GRADES } from "@/constants/auth";
+import { updateUserProfile } from "@/api/profile";
+import { toast } from "@/hooks/useToast";
 
 const Layout: React.FC = () => {
   const { user } = useAuth();
@@ -15,19 +23,30 @@ const Layout: React.FC = () => {
   const [grade, setGrade] = useState<number>();
   // console.log('grade - ', grade)
 
-  const handleGradeUpdate = () => {
+  const handleGradeUpdate = async () => {
     if (!grade || !ALLOWED_GRADES.includes(grade)) {
-      console.log('Please pick from allowed grades.')
+      console.log("Please pick from allowed grades.");
       setGradeError("Please pick from allowed grades.");
       return;
     }
-    
-    // TODO: call profile updation api
+
+    // TODO: Move this to a hook as profile will be updated from multiple places
+    const response = await updateUserProfile({
+      grade,
+    });
+    if (response.success) {
+      gradeUpdated = response.data.grade;
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Profile update failed",
+        description: "Something went wrong",
+      });
+    }
   };
 
   return (
     <div className="flex h-screen w-screen">
-
       {/* Block everything with modal if grade is not set */}
       {!gradeUpdated && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -44,9 +63,7 @@ const Layout: React.FC = () => {
               <select
                 className="w-full p-2 border rounded mr-4"
                 value={grade}
-                onChange={(e) =>
-                  setGrade(parseInt(e.target.value))
-                }
+                onChange={(e) => setGrade(parseInt(e.target.value))}
               >
                 <option value="">Select Grade</option>
                 {ALLOWED_GRADES.map((grade) => (
@@ -59,9 +76,7 @@ const Layout: React.FC = () => {
                 Update Grade
               </Button>
             </CardFooter>
-            {gradeError && (
-              <p className="text-red-500 text-sm">{gradeError}</p>
-            )}
+            {gradeError && <p className="text-red-500 text-sm">{gradeError}</p>}
           </Card>
         </div>
       )}
