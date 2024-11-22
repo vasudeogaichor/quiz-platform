@@ -77,7 +77,7 @@ export default class UserController {
       req?.user?.id,
       updates,
       { new: true, runValidators: true }
-    ).select('-password');
+    ).select('-password -googleId');
 
     return Response.success(user);
   }
