@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/shared/Sidebar";
 import Navbar from "@/components/shared/Navbar";
-import { useAuth } from "@/hooks/useAuth";
 import {
   Card,
   CardContent,
@@ -14,11 +13,11 @@ import { Button } from "@/components/ui/button";
 import { ALLOWED_GRADES } from "@/constants/auth";
 import { updateUserProfile } from "@/api/profile";
 import { toast } from "@/hooks/useToast";
+import { useUserStore } from "@/store";
 
 const Layout: React.FC = () => {
-  const { user } = useAuth();
-  // const [gradeUpdated, setGradeUpdated] = useState(user?.grade);
-  let gradeUpdated = user?.grade;
+  const { user } = useUserStore();
+  const [gradeUpdated, setGradeUpdated] = useState<number | undefined>(user?.grade);
   const [gradeError, setGradeError] = useState<string>();
   const [grade, setGrade] = useState<number>();
   // console.log('grade - ', grade)
@@ -35,7 +34,7 @@ const Layout: React.FC = () => {
       grade,
     });
     if (response.success) {
-      gradeUpdated = response.data.grade;
+      setGradeUpdated(response.data.grade);
     } else {
       toast({
         variant: "destructive",

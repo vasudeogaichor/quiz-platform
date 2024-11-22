@@ -3,28 +3,30 @@ import { useState, useEffect } from "react";
 import { loginUser, signupUser, signupUserWithGoogle } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "./useToast";
+import { useUserStore } from "@/store";
 
 interface AuthHook {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  user: User | null;
+  // user: User | null;
   signup: (signupData: SignupFormData) => Promise<void>;
   signupWithGoogle: (cred: string) => Promise<void>;
 }
 
-interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  grade: number;
-}
+// interface User {
+//   id: string;
+//   fullName: string;
+//   email: string;
+//   grade: number;
+// }
 
 export const useAuth = (): AuthHook => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const { setUser } = useUserStore();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -155,7 +157,6 @@ export const useAuth = (): AuthHook => {
     isLoading,
     login,
     logout,
-    user,
     signup,
     signupWithGoogle,
   };
