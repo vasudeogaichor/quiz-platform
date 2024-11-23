@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { BookOpen, Trophy, Clock, Activity } from 'lucide-react';
+import { useUserStore } from '@/store';
 
 interface QuizStats {
   totalQuizzes: number;
@@ -18,11 +19,14 @@ interface RecentQuiz {
 }
 
 const DashboardPage = () => {
+  const { userStats } = useUserStore();
+  console.log('DashboardPage user  -', userStats)
+
   const stats: QuizStats = {
-    totalQuizzes: 15,
-    averageScore: 75,
-    completedToday: 2,
-    streakDays: 5
+    totalQuizzes: userStats?.totalQuizzes ?? 0,
+    averageScore: userStats?.averageScore ?? 0,
+    completedToday: userStats?.completedToday ?? 0,
+    streakDays: userStats?.streakDays ?? 0
   };
 
   const recentQuizzes: RecentQuiz[] = [

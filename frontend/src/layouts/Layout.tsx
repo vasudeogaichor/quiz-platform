@@ -24,32 +24,32 @@ const Layout: React.FC = () => {
   const [grade, setGrade] = useState<number>();
   // console.log('grade - ', grade)
 
-  const handleGradeUpdate = async () => {
-    if (!grade || !ALLOWED_GRADES.includes(grade)) {
-      console.log("Please pick from allowed grades.");
-      setGradeError("Please pick from allowed grades.");
-      return;
-    }
+  // const handleGradeUpdate = async () => {
+  //   if (!grade || !ALLOWED_GRADES.includes(grade)) {
+  //     console.log("Please pick from allowed grades.");
+  //     setGradeError("Please pick from allowed grades.");
+  //     return;
+  //   }
 
-    // TODO: Move this to a hook as profile will be updated from multiple places
-    const response = await updateUserProfile({
-      grade,
-    });
-    if (response.success) {
-      setGradeUpdated(response.data.grade);
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Profile update failed",
-        description: "Something went wrong",
-      });
-    }
-  };
+  //   // TODO: Move this to a hook as profile will be updated from multiple places
+  //   const response = await updateUserProfile({
+  //     grade,
+  //   });
+  //   if (response.success) {
+  //     setGradeUpdated(response.data.grade);
+  //   } else {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Profile update failed",
+  //       description: "Something went wrong",
+  //     });
+  //   }
+  // };
 
   return (
     <div className="flex h-screen w-screen">
       {/* Block everything with modal if grade is not set */}
-      {!gradeUpdated && (
+      {/* {!gradeUpdated && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <Card className="w-96">
             <CardHeader>
@@ -80,7 +80,7 @@ const Layout: React.FC = () => {
             {gradeError && <p className="text-red-500 text-sm">{gradeError}</p>}
           </Card>
         </div>
-      )}
+      )} */}
 
       {/* Sidebar */}
       <Sidebar />

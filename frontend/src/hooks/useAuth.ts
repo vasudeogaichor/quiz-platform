@@ -27,7 +27,7 @@ export const useAuth = (): AuthHook => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   // const [user, setUser] = useState<User | null>(null);
-  const { setUser } = useUserStore();
+  const { setUser, setUserStats } = useUserStore();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -36,23 +36,27 @@ export const useAuth = (): AuthHook => {
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        // console.log("useauth token - ", token);
+        console.log("useauth token - ", token);
 
         if (token) {
           const response = await getUserProfile();
+          console.log("checkauth - ", response);
           if (response.success) {
             setUser(response.data.user);
+            setUserStats(response.data.stats);
             setIsAuthenticated(true);
             setIsLoading(false);
           } else {
             localStorage.removeItem("authToken");
             setIsAuthenticated(false);
             setIsLoading(false);
+            // navigate("/");
           }
         } else {
           localStorage.removeItem("authToken");
           setIsAuthenticated(false);
           setIsLoading(false);
+          // navigate("/");
         }
       } catch (error) {
         setIsAuthenticated(false);
