@@ -7,6 +7,7 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import DashboardPage from "./components/dashboard/Dashboard";
 import QuizPage from "./components/quiz/quizPage";
 import SettingsPage from "./components/settings/SettingsPage";
+import ResultsPage from "./components/result/ResultPage";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
             <Route path="/" element={<DashboardPage />} />
              <Route path="/quiz" element={<QuizPage />} />
              <Route path="/settings" element={<SettingsPage/>} />
-            {/*<Route path="/results" element={<ResultsPage />} /> */}
+            <Route path="/results" element={<ResultsPage />} />
           </Route>
         </Route>
       </Routes>
