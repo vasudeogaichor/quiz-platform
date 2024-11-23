@@ -17,7 +17,9 @@ import { useUserStore } from "@/store";
 
 const Layout: React.FC = () => {
   const { user } = useUserStore();
+  // console.log('user - ', user)
   const [gradeUpdated, setGradeUpdated] = useState<number | undefined>(user?.grade);
+  // console.log('gradeUpdated - ', gradeUpdated)
   const [gradeError, setGradeError] = useState<string>();
   const [grade, setGrade] = useState<number>();
   // console.log('grade - ', grade)

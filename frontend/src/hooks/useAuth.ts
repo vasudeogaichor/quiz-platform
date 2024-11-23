@@ -4,6 +4,7 @@ import { loginUser, signupUser, signupUserWithGoogle } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "./useToast";
 import { useUserStore } from "@/store";
+import { getUserProfile } from "@/api/profile";
 
 interface AuthHook {
   isAuthenticated: boolean;
@@ -30,44 +31,39 @@ export const useAuth = (): AuthHook => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // useEffect(() => {
-  //   // Check authentication on initial load
-  //   const checkAuth = async () => {
-  //     try {
-  //       // TODO: Replace with actual token validation
-  //       const token = localStorage.getItem("authToken");
-  //       // console.log("token - ", token);
-  //       if (token) {
-  //         setIsAuthenticated(true);
-  //         return;
-  //         // Validate token with backend
-  //         const response = await fetch("/api/validate-token", {
-  //           method: "POST",
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         });
+  useEffect(() => {
+    // Check authentication on initial load
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        // console.log("useauth token - ", token);
 
-  //         if (response.ok) {
-  //           const userData = await response.json();
-  //           setUser(userData);
-  //           setIsAuthenticated(true);
-  //         } else {
-  //           // Invalid token
-  //           localStorage.removeItem("authToken");
-  //           setIsAuthenticated(false);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Authentication check failed", error);
-  //       setIsAuthenticated(false);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
+        if (token) {
+          const response = await getUserProfile();
+          if (response.success) {
+            setUser(response.data.user);
+            setIsAuthenticated(true);
+            setIsLoading(false);
+          } else {
+            localStorage.removeItem("authToken");
+            setIsAuthenticated(false);
+            setIsLoading(false);
+          }
+        } else {
+          localStorage.removeItem("authToken");
+          setIsAuthenticated(false);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  //   checkAuth();
-  // }, []);
+    checkAuth();
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -77,6 +73,7 @@ export const useAuth = (): AuthHook => {
         localStorage.setItem("authToken", token);
         setUser(user);
         setIsAuthenticated(true);
+        setIsLoading(true);
         navigate("/");
       } else {
         toast({
@@ -99,6 +96,7 @@ export const useAuth = (): AuthHook => {
         localStorage.setItem("authToken", token);
         setUser(user);
         setIsAuthenticated(true);
+        setIsLoading(true);
         navigate("/");
       } else {
         toast({
@@ -127,6 +125,7 @@ export const useAuth = (): AuthHook => {
         localStorage.setItem("authToken", token);
         setUser(user);
         setIsAuthenticated(true);
+        setIsLoading(true);
         navigate("/");
       } else {
         toast({
