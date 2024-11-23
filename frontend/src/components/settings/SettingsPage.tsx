@@ -22,13 +22,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DialogBox } from "../ui/dialog-box";
 import { Bell, Lock, User, Settings, Mail } from "lucide-react";
+import { useUserStore } from "@/store";
+import { updateUserProfile } from "@/api/profile";
+import { useToast } from "@/hooks/useToast";
 
 interface UserSettings {
   profile: {
     name: string;
     email: string;
     grade: string;
-    avatar: string;
+    avatar?: string;
   };
   notifications: {
     emailNotifications: boolean;
@@ -45,18 +48,16 @@ interface UserSettings {
 }
 
 const SettingsPage: React.FC = () => {
-  const [showPopup, setShowPopup] = useState(false);
-
-  const handleNotImplemented = () => {
-    setShowPopup(true);
-  };
-
+  const { toast } = useToast();
+  const { user } = useUserStore();
+  const [ profileErrors, setProfileErrors ] = useState<string | null>(null);
+  // console.log('profileErrors, setProfileErrors - ', profileErrors, setProfileErrors)
   const [settings, setSettings] = useState<UserSettings>({
     profile: {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      grade: "9",
-      avatar: "/api/placeholder/100/100",
+      name: user?.fullName ?? "",
+      email: user?.email ?? "",
+      grade: String(user?.grade) ?? "",
+      // avatar: "/api/placeholder/100/100",
     },
     notifications: {
       emailNotifications: true,
@@ -72,10 +73,53 @@ const SettingsPage: React.FC = () => {
     },
   });
 
+  const handleSaveProfile = async (updatedProfile: UserSettings["profile"]) => {
+    // console.log("calling api..........");
+    // console.log("updatedProfile - ", settings.profile);
+    try {
+      const updatedProfileData = {
+        grade: parseInt(updatedProfile.grade),
+        email: updatedProfile.email,
+        fullName: updatedProfile.name
+      }
+      const response = await updateUserProfile(updatedProfileData);
+      // console.log("response - ", response);
+      if (response.success) {
+        toast({
+          variant: "default",
+          title: "Profile updated successfully",
+          // description: "Something went wrong",
+        });
+      } else {
+        if (response.errors?.length) {
+            setProfileErrors(response.errors.join(", "));
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Profile update failed",
+            description: "Something went wrong",
+          });
+        }
+      }
+    } catch (error: any) {
+      console.log('error - ', error)
+      if (error?.response?.data?.errors?.length) {
+        setProfileErrors(error.response.data.errors.join(", "));
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Profile update failed",
+          description: "Something went wrong",
+        });
+      }
+    }
+  };
+
   const handleProfileUpdate = (
     field: keyof UserSettings["profile"],
     value: string
   ) => {
+    setProfileErrors("");
     setSettings((prev) => ({
       ...prev,
       profile: { ...prev.profile, [field]: value },
@@ -155,13 +199,13 @@ const SettingsPage: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center space-x-4">
+              {/* <div className="flex items-center space-x-4">
                 <Avatar className="h-24 w-24">
                   <AvatarImage src={settings.profile.avatar} />
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <Button variant="outline">Change Avatar</Button>
-              </div>
+              </div> */}
 
               <div className="space-y-4">
                 <div className="grid gap-2">
@@ -208,6 +252,16 @@ const SettingsPage: React.FC = () => {
                   </Select>
                 </div>
               </div>
+              {profileErrors && (
+                  <p className="text-red-500 text-sm">{profileErrors}</p>
+                )}
+              <Button
+                variant="default"
+                onClick={() => handleSaveProfile(settings.profile)}
+                className="w-2/5"
+              >
+                Save Changes
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>

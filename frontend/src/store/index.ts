@@ -4,6 +4,7 @@ interface User {
   id: string;
   grade?: number;
   fullName?: string;
+  email?: string;
 }
 
 interface UserStats {
