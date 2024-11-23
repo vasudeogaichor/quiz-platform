@@ -5,11 +5,14 @@ import QuizAttempt from "../models/QuizAttempt";
 import { AppError, Response } from "../core/index";
 import { IQuizAttempt } from "../models/QuizAttempt";
 import { AuthenticatedRequest } from "../types/controllers";
+import { startOfDay, subDays } from "date-fns";
 
 interface IQuizStats {
   totalQuizzes: number;
   averageScore: number;
   topScore: number;
+  streakDays: number;
+  completedToday: number;
 }
 
 interface ITopicMastery {
@@ -50,9 +53,58 @@ export default class UserController {
       },
     ]);
 
+    const today = startOfDay(new Date());
+    const yesterday = startOfDay(subDays(today, 1));
+
+    // Quizzes Attempted Today
+    const quizzesToday = await QuizAttempt.countDocuments({
+      user: user._id,
+      completedAt: { $gte: today },
+    });
+
+    // Consecutive Quiz Days
+    const consecutiveDays = await QuizAttempt.aggregate([
+      { $match: { user: user._id, completedAt: { $ne: null } } },
+      { $sort: { completedAt: -1 } }, // Sort by latest completion
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$completedAt" } },
+          count: { $sum: 1 }, // Group by unique day
+        },
+      },
+    ]);
+
+    // Calculate streak
+    let streak = 0;
+    let expectedDate = today;
+
+    for (const day of consecutiveDays) {
+      const dayDate = new Date(day._id);
+      if (dayDate.toISOString() === expectedDate.toISOString()) {
+        streak++;
+        expectedDate = subDays(expectedDate, 1); // Move to the previous day
+      } else if (dayDate < expectedDate) {
+        break; // Streak is broken
+      }
+    }
+
+    if (quizStats[0]) {
+      quizStats[0] = {
+        ...quizStats[0],
+        completedToday: quizzesToday,
+        streakDays: streak,
+      };
+    }
+
     return Response.success({
       user,
-      stats: quizStats[0] || { totalQuizzes: 0, averageScore: 0, topScore: 0 },
+      stats: quizStats[0] || {
+        totalQuizzes: 0,
+        averageScore: 0,
+        topScore: 0,
+        streakDays: 0,
+        completedToday: 0,
+      },
       topicMastery: topicMastery.reduce((acc: ITopicMastery, topic: any) => {
         acc[topic._id] = topic.averageScore;
         return acc;
@@ -60,24 +112,26 @@ export default class UserController {
     });
   }
 
-  static async updateProfile(req: Request, res: ExpressResponse): Promise<Response> {
-    const allowedUpdates = ['fullName', 'grade'];
+  static async updateProfile(
+    req: Request,
+    res: ExpressResponse
+  ): Promise<Response> {
+    const allowedUpdates = ["fullName", "grade"];
     const updates = Object.keys(req.body)
-      .filter(key => allowedUpdates.includes(key))
+      .filter((key) => allowedUpdates.includes(key))
       .reduce((obj: { [key: string]: any }, key: string) => {
         obj[key] = req.body[key];
         return obj;
       }, {});
 
     if (Object.keys(updates).length === 0) {
-      throw AppError.badRequest('No valid updates provided');
+      throw AppError.badRequest("No valid updates provided");
     }
 
-    const user = await User.findByIdAndUpdate(
-      req?.user?.id,
-      updates,
-      { new: true, runValidators: true }
-    ).select('-password -googleId');
+    const user = await User.findByIdAndUpdate(req?.user?.id, updates, {
+      new: true,
+      runValidators: true,
+    }).select("-password -googleId");
 
     return Response.success(user);
   }

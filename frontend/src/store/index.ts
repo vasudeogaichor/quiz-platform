@@ -10,6 +10,8 @@ interface UserStats {
   totalQuizzes: 0;
   averageScore: 0;
   topScore: 0;
+  completedToday: 0;
+  streakDays: 0
 }
 
 interface UserStore {
