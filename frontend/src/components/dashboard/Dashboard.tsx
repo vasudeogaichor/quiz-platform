@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { BookOpen, Trophy, Clock, Activity } from 'lucide-react';
 import { useUserStore } from '@/store';
+import { useNavigate } from 'react-router-dom';
 
 interface QuizStats {
   totalQuizzes: number;
@@ -20,6 +21,7 @@ interface RecentQuiz {
 
 const DashboardPage = () => {
   const { userStats } = useUserStore();
+  const navigate = useNavigate();
   console.log('DashboardPage user  -', userStats)
 
   const stats: QuizStats = {
@@ -38,7 +40,7 @@ const DashboardPage = () => {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Welcome back, Student!</h1>
-        <Button>Start New Quiz</Button>
+        <Button onClick={() => {navigate("/quiz")}}>Start New Quiz</Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

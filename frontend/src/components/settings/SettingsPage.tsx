@@ -49,7 +49,7 @@ interface UserSettings {
 
 const SettingsPage: React.FC = () => {
   const { toast } = useToast();
-  const { user } = useUserStore();
+  const { user, setUser } = useUserStore();
   const [ profileErrors, setProfileErrors ] = useState<string | null>(null);
   // console.log('profileErrors, setProfileErrors - ', profileErrors, setProfileErrors)
   const [settings, setSettings] = useState<UserSettings>({
@@ -85,6 +85,7 @@ const SettingsPage: React.FC = () => {
       const response = await updateUserProfile(updatedProfileData);
       // console.log("response - ", response);
       if (response.success) {
+        setUser(response.data);
         toast({
           variant: "default",
           title: "Profile updated successfully",
