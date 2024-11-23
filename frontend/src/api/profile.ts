@@ -3,7 +3,7 @@ import apiClient from "./axiosInstance";
 import { profileUpdateData } from "@/types/profile";
 
 export const getUserProfile = async (): Promise<ApiResponse> => {
-  const response = await apiClient.post<ApiResponse>("/api/profile");
+  const response = await apiClient.get<ApiResponse>("/api/user/profile");
   return response.data;
 };
 
