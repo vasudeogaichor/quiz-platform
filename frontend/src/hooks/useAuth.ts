@@ -30,44 +30,44 @@ export const useAuth = (): AuthHook => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  useEffect(() => {
-    // Check authentication on initial load
-    const checkAuth = async () => {
-      try {
-        // TODO: Replace with actual token validation
-        const token = localStorage.getItem("authToken");
-        // console.log("token - ", token);
-        if (token) {
-          setIsAuthenticated(true);
-          return;
-          // Validate token with backend
-          const response = await fetch("/api/validate-token", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+  // useEffect(() => {
+  //   // Check authentication on initial load
+  //   const checkAuth = async () => {
+  //     try {
+  //       // TODO: Replace with actual token validation
+  //       const token = localStorage.getItem("authToken");
+  //       // console.log("token - ", token);
+  //       if (token) {
+  //         setIsAuthenticated(true);
+  //         return;
+  //         // Validate token with backend
+  //         const response = await fetch("/api/validate-token", {
+  //           method: "POST",
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         });
 
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData);
-            setIsAuthenticated(true);
-          } else {
-            // Invalid token
-            localStorage.removeItem("authToken");
-            setIsAuthenticated(false);
-          }
-        }
-      } catch (error) {
-        console.error("Authentication check failed", error);
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //         if (response.ok) {
+  //           const userData = await response.json();
+  //           setUser(userData);
+  //           setIsAuthenticated(true);
+  //         } else {
+  //           // Invalid token
+  //           localStorage.removeItem("authToken");
+  //           setIsAuthenticated(false);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Authentication check failed", error);
+  //       setIsAuthenticated(false);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    checkAuth();
-  }, []);
+  //   checkAuth();
+  // }, []);
 
   const login = async (email: string, password: string) => {
     try {
