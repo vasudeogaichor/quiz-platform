@@ -28,6 +28,8 @@ export default class UserController {
     // console.log('user - ', user)
     if (!user) throw AppError.notFound("User not found");
 
+    // TODO: Cache below stats and update whenevera new quiz is attempted by user to reduce queries
+
     // Get quiz statistics
     const quizStats: IQuizStats[] = await QuizAttempt.aggregate([
       { $match: { user: user._id, completedAt: { $ne: null } } },
