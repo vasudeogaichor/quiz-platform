@@ -8,7 +8,7 @@ import { questions } from "./questions";
 
 const importQuestions = async () => {
   try {
-    await mongoose.connect("mongodb+srv://vasudeogaichor:dbforquizmaster@dev.tpfj9.mongodb.net/?retryWrites=true&w=majority&appName=dev" || "");
+    await mongoose.connect("{{MONGO_URI}}" || "");
 
     await Question.insertMany(questions);
 
