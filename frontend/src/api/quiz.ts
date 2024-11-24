@@ -6,14 +6,22 @@ export const getQuestion = async (): Promise<ApiResponse> => {
   return response.data;
 };
 
-export const submitAnswer = async(submitPayload: {
-  attemptId?: string,
-  questionId?: string,
-  answer?: number
+export const submitAnswer = async (submitPayload: {
+  attemptId?: string;
+  questionId?: string;
+  answer?: number;
 }): Promise<ApiResponse> => {
   const response = await apiClient.post<ApiResponse>(
     "/api/quiz/submit-answer",
     submitPayload
   );
   return response.data;
-}
+};
+
+export const completeQuiz = async (quizId: string): Promise<ApiResponse> => {
+  const response = await apiClient.post<ApiResponse>(
+    "/api/quiz/complete-quiz",
+    { attemptId: quizId }
+  );
+  return response.data;
+};
