@@ -1,6 +1,6 @@
 import { Request, Response as ExpressResponse } from "express";
 import { CATEngine } from "../services/CATEngine";
-import Question from "../models/Question";
+import Question, { IQuestion } from "../models/Question";
 import QuizAttempt from "../models/QuizAttempt";
 import { AppError, Response } from "../core";
 import mongoose, { Types } from "mongoose";
@@ -115,7 +115,12 @@ export default class QuizController {
       (q) => q.questionId.toString() === questionId
     );
 
-    if (questionIndex == -1) {
+    if (questionIndex !== -1) {
+      // Update the existing question in the array
+      attempt.questions[questionIndex].userAnswer = answer + 1;
+      attempt.questions[questionIndex].isCorrect = isCorrect;
+      attempt.questions[questionIndex].timeSpent = timeSpent;
+    } else {
       attempt.questions.push({
         questionId: new mongoose.Types.ObjectId(questionId),
         userAnswer: answer + 1,
@@ -123,11 +128,6 @@ export default class QuizController {
         timeSpent,
         difficultyAttempted: question.difficulty,
       });
-    } else {
-      // Update the existing question in the array
-      attempt.questions[questionIndex].userAnswer = answer + 1;
-      attempt.questions[questionIndex].isCorrect = isCorrect;
-      attempt.questions[questionIndex].timeSpent = timeSpent;
     }
 
     // Update attempt
@@ -173,13 +173,16 @@ export default class QuizController {
     >();
     attempt.questions.forEach((q) => {
       console.log('q - ', q)
-      const topic = q.questionId.topic;
+      const question = q.questionId as any;
+      const topic = question.topic;
       if (!topicPerformance.has(topic)) {
         topicPerformance.set(topic, { correct: 0, total: 0 });
       }
       const stats = topicPerformance.get(topic);
-      stats.total++;
-      if (q.isCorrect) stats.correct++;
+      if (stats) {
+        stats.total++;
+        if (q.isCorrect) stats.correct++;
+      }
     });
 
     // Convert topic performance to percentages
@@ -195,13 +198,14 @@ export default class QuizController {
     await attempt.save();
 
     // Generate recommendations based on performance
-    // const recommendations = this.generateRecommendations(topicScores);
+    const recommendations = QuizController.generateRecommendations(topicScores);
 
+    // TODO: Enable timespent calculation after version 1 is deployed
     return res.json(
       Response.success({
         score,
         topicPerformance: topicScores,
-        // recommendations,
+        recommendations,
         // timeSpent: attempt.questions.reduce(
         //   (sum, q) => sum + (q.timeSpent || 0),
         //   0
