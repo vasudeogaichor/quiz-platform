@@ -23,10 +23,10 @@ export const routes: Routes = {
       handler: 'QuizController.submitAnswer',
       middleware: ['auth'],
     },
-    // 'POST /complete-quiz': {
-    //   handler: 'QuizController.completeQuiz',
-    //   middleware: ['auth'],
-    // },
+    'POST /complete-quiz': {
+      handler: 'QuizController.completeQuiz',
+      middleware: ['auth'],
+    },
   },
   user: {
     'GET /profile': { 

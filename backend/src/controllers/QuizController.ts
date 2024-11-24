@@ -19,6 +19,12 @@ interface QuizHistory {
   completedAt: Date;
 }
 
+interface Question {
+  _id: string;
+  topic: string;
+  difficulty: number;
+}
+
 export default class QuizController {
   static catEngine = new CATEngine();
   // console.log('catEngine - ', catEngine)
@@ -62,13 +68,20 @@ export default class QuizController {
       );
     }
 
+    // TODO: when more questions are available use grade to filter the available questions further
+    const attemptedQuestionIds = attempt.questions.map((q) => q.questionId);
+    const remainingQuestions: Question[] = await Question.find({
+      _id: { $nin: attemptedQuestionIds },
+      // grade: req.user.grade,
+    }).select("-options.isCorrect -__v");
+
     // Get next question based on CAT algorithm
     const nextQuestion = await QuizController.catEngine.selectNextQuestion(
       attempt.questions.map((q) => ({
         ...q,
         questionId: q.questionId.toString(),
       })),
-      await Question.find({ grade: req.user.grade }),
+      remainingQuestions,
       ["algebra", "geometry", "biology", "physics", "chemistry", "mathematics", "computing"]
     );
 
@@ -103,7 +116,13 @@ export default class QuizController {
     );
 
     if (questionIndex == -1) {
-      throw AppError.notFound("Question not found in this attempt");
+      attempt.questions.push({
+        questionId: new mongoose.Types.ObjectId(questionId),
+        userAnswer: answer + 1,
+        isCorrect,
+        timeSpent,
+        difficultyAttempted: question.difficulty,
+      });
     } else {
       // Update the existing question in the array
       attempt.questions[questionIndex].userAnswer = answer + 1;
@@ -137,9 +156,9 @@ export default class QuizController {
     const { attemptId } = req.body;
 
     const attempt = await QuizAttempt.findById(attemptId).populate(
-      "questions.question"
+      "questions.questionId"
     );
-
+    // console.log('attempt - ', attempt)
     if (!attempt) throw AppError.notFound("Quiz attempt not found");
 
     // Calculate final score and topic performance
@@ -153,7 +172,8 @@ export default class QuizController {
       { correct: number; total: number }
     >();
     attempt.questions.forEach((q) => {
-      const topic = q.question.topic;
+      console.log('q - ', q)
+      const topic = q.questionId.topic;
       if (!topicPerformance.has(topic)) {
         topicPerformance.set(topic, { correct: 0, total: 0 });
       }
@@ -175,17 +195,17 @@ export default class QuizController {
     await attempt.save();
 
     // Generate recommendations based on performance
-    const recommendations = this.generateRecommendations(topicScores);
+    // const recommendations = this.generateRecommendations(topicScores);
 
     return res.json(
       Response.success({
         score,
         topicPerformance: topicScores,
-        recommendations,
-        timeSpent: attempt.questions.reduce(
-          (sum, q) => sum + (q.timeSpent || 0),
-          0
-        ),
+        // recommendations,
+        // timeSpent: attempt.questions.reduce(
+        //   (sum, q) => sum + (q.timeSpent || 0),
+        //   0
+        // ),
       })
     );
   }
