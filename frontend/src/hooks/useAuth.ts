@@ -36,11 +36,11 @@ export const useAuth = (): AuthHook => {
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        console.log("useauth token - ", token);
+        // console.log("useauth token - ", token);
 
         if (token) {
           const response = await getUserProfile();
-          console.log("checkauth - ", response);
+          // console.log("checkauth - ", response);
           if (response.success) {
             setUser(response.data.user);
             setUserStats(response.data.stats);

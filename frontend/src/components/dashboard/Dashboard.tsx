@@ -22,7 +22,7 @@ interface RecentQuiz {
 const DashboardPage = () => {
   const { userStats } = useUserStore();
   const navigate = useNavigate();
-  console.log('DashboardPage user  -', userStats)
+  // console.log('DashboardPage user  -', userStats)
 
   const stats: QuizStats = {
     totalQuizzes: userStats?.totalQuizzes ?? 0,
