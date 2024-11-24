@@ -28,48 +28,7 @@ interface Question {
   difficulty: 3 | 5 | 8;
 }
 
-const TOTAL_QUESTIONS = 2;
-
-// Mock data - in a real app, this would come from an API
-// const mockQuestions: Question[] = [
-//   {
-//     id: "1",
-//     text: "What is the result of 3x + 5 = 20 when solved for x?",
-//     topic: "Algebra",
-//     difficulty: "medium",
-//     options: [
-//       { id: "0", text: "x = 5" },
-//       { id: "1", text: "x = 15/3" },
-//       { id: "2", text: "x = 10/2" },
-//       { id: "3", text: "x = 3" },
-//     ],
-//   },
-//   {
-//     id: "2",
-//     text: "What is the area of a triangle with base 6 and height 8?",
-//     topic: "Geometry",
-//     difficulty: "easy",
-//     options: [
-//       { id: "0", text: "24" },
-//       { id: "1", text: "12" },
-//       { id: "2", text: "48" },
-//       { id: "3", text: "16" },
-//     ],
-//   },
-//   // Add more questions...
-// ];
-// .concat(Array.from({ length: 18 }, (_, i) => ({
-//     id: `${i + 3}`,
-//     text: `Sample Question ${i + 3}`,
-//     topic: ['Algebra', 'Geometry', 'Statistics'][i % 3],
-//     difficulty: ['easy', 'medium', 'hard'][i % 3] as 'easy' | 'medium' | 'hard',
-//     options: [
-//         { id: '0', text: 'Option A' },
-//         { id: '1', text: 'Option B' },
-//         { id: '2', text: 'Option C' },
-//         { id: '3', text: 'Option D' }
-//     ]
-// })));
+const TOTAL_QUESTIONS = 20;
 
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
@@ -85,6 +44,7 @@ const QuizPage: React.FC = () => {
 
   // Quiz state management
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // console.log('currentQuestionIndex - ', currentQuestionIndex)
   const [timeRemaining, setTimeRemaining] = useState(45 * 60); // 45 minutes total
   const [quizStarted, setQuizStarted] = useState(false);
 
@@ -148,6 +108,7 @@ const QuizPage: React.FC = () => {
         // console.log("submit response - ", response);
 
         const nextQuestion = await getQuestion();
+        // console.log('nextQuestion - ', nextQuestion)
         if (nextQuestion.success) {
            setCurrentQuestion(nextQuestion.data.question);
            setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -175,7 +136,7 @@ const QuizPage: React.FC = () => {
   const handleQuizSubmit = async (attemptId: string | undefined) => {
     try {
       const response = await completeQuiz(attemptId || "");
-      console.log('response - ', response)
+      // console.log('handleQuizSubmit response - ', response)
       if (response.success) {
         navigate("/results", {
           state: {
