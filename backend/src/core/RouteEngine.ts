@@ -75,11 +75,11 @@ export default class RouteEngine {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const result = await handler(req, res, next);
-        console.log("result - ", result);
+        // console.log("result - ", result);
         res.json(result);
         // return result;
       } catch (error) {
-        console.log("error - ", error);
+        // console.log("error - ", error);
         next(error);
       }
     };

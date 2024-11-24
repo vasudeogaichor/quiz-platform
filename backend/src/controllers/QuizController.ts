@@ -45,7 +45,7 @@ export default class QuizController {
         // grade: req.user.grade,
         difficulty: 5,
       }).select("-options.isCorrect -__v");
-      console.log('firstQuestion - ', firstQuestion)
+      // console.log('firstQuestion - ', firstQuestion)
 
       if (!firstQuestion)
         throw AppError.notFound("No question found to start the quiz.");
@@ -172,7 +172,7 @@ export default class QuizController {
       { correct: number; total: number }
     >();
     attempt.questions.forEach((q) => {
-      console.log('q - ', q)
+      // console.log('q - ', q)
       const question = q.questionId as any;
       const topic = question.topic;
       if (!topicPerformance.has(topic)) {

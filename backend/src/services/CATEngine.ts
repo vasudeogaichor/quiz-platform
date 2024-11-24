@@ -56,7 +56,7 @@ export class CATEngine {
     topics: string[]
   ): Promise<Question | null> {
     const currentAbility = this.estimateAbility(userResponses);
-    console.log('currentAbility - ', currentAbility)
+    // console.log('currentAbility - ', currentAbility)
 
     // Filter questions not yet answered
     const answeredIds = new Set(userResponses.map((r) => r.questionId));
