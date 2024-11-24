@@ -45,22 +45,23 @@ export const useAuth = (): AuthHook => {
             setUser(response.data.user);
             setUserStats(response.data.stats);
             setIsAuthenticated(true);
-            setIsLoading(false);
+            // setIsLoading(false);
           } else {
             localStorage.removeItem("authToken");
             setIsAuthenticated(false);
-            setIsLoading(false);
+            // setIsLoading(false);
             // navigate("/");
           }
         } else {
           localStorage.removeItem("authToken");
           setIsAuthenticated(false);
-          setIsLoading(false);
+          // setIsLoading(false);
           // navigate("/");
         }
       } catch (error) {
+        localStorage.removeItem("authToken");
         setIsAuthenticated(false);
-        setIsLoading(false);
+        // setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
