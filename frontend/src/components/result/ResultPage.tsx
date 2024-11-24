@@ -12,11 +12,16 @@ interface TopicPerformance {
   // improvement: number;
 }
 
+interface Recommendation {
+  topic: string;
+  message: string;
+}
+
 interface QuizResult {
   totalQuestions: number;
   correctAnswers: number;
   score: number;
-  recommendations: string[];
+  recommendations: Recommendation[];
   topicPerformances: TopicPerformance;
   timeSpent: number;
 }
@@ -25,7 +30,7 @@ const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { state } = useLocation();
-  // console.log('state - ', state)
+  console.log('state - ', state)
   const { totalQuestions, correctAnswers, score, recommendations, timeSpent, topicPerformances } = state as QuizResult;
   const resultParams = {
     totalQuestions, correctAnswers, score, recommendations, timeSpent, topicPerformances
@@ -50,7 +55,7 @@ const ResultsPage: React.FC = () => {
           <Card>
             <CardContent className="p-6 text-center">
               <h3 className="text-lg text-gray-500 mb-2">Total Score</h3>
-              <p className="text-4xl font-bold">{resultParams.score}%</p>
+              <p className="text-4xl font-bold">{resultParams.score}</p>
             </CardContent>
           </Card>
 
@@ -140,7 +145,7 @@ const ResultsPage: React.FC = () => {
                       <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
                         {index + 1}
                       </span>
-                      <span className="text-gray-600">{suggestion}</span>
+                      <span className="text-gray-600">{suggestion.message}</span>
                     </li>
                   ))}
                 </ul>
