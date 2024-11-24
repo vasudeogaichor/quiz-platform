@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DialogBox } from "../ui/dialog-box";
 import { Bell, Lock, User, Settings, Mail } from "lucide-react";
 import { useUserStore } from "@/store";
