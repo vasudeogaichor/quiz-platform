@@ -10,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { getQuestion, submitAnswer } from "@/api/quiz";
+import { useToast } from "@/hooks/useToast";
 
 // Define types for the quiz
 interface Option {
@@ -19,11 +21,14 @@ interface Option {
 
 interface Question {
   id: string;
+  _id?: string;
   text: string;
   options: Option[];
   topic: string;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: 3 | 5 | 8;
 }
+
+const TOTAL_QUESTIONS = 2;
 
 // Mock data - in a real app, this would come from an API
 const mockQuestions: Question[] = [
@@ -69,8 +74,15 @@ const mockQuestions: Question[] = [
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
-  console.log("QuizPage user - ", user, user?.grade);
+  const { toast } = useToast();
+  const [attemptId, setAttemptId] = useState<string>();
+  console.log('attemptId - ', attemptId)
+  // console.log("QuizPage user - ", user, user?.grade);
 
+  const [currentQuestion, setCurrentQuestion] = useState<Question>();
+  console.log('currentQuestion - ', currentQuestion)
+  const [currentSelectedOption, setCurrentSelectedOption] = useState<string>();
+  console.log('currentSelectedOption - ', currentSelectedOption)
   // Quiz state management
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<
@@ -83,6 +95,14 @@ const QuizPage: React.FC = () => {
   const [questionDifficulties, setQuestionDifficulties] = useState<
     Record<string, number>
   >({});
+
+  useEffect(() => {
+    if (currentQuestion) {
+      currentQuestion.options = currentQuestion.options.map(
+        (option, index) => ({ ...option, id: index.toString() })
+      );
+    }
+  }, [currentQuestion]);
 
   // Timer effect
   useEffect(() => {
@@ -99,31 +119,45 @@ const QuizPage: React.FC = () => {
       });
     }, 1000);
 
+    (async () => {
+      const response = await getQuestion();
+      console.log("response - ", response);
+      if (response.success) {
+        setAttemptId(response.data.attemptId);
+        setCurrentQuestion(response.data.question);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+        });
+        navigate("/");
+      }
+    })();
+
     return () => clearInterval(timer);
   }, [quizStarted]);
 
   // Handle option selection
   const handleOptionSelect = (optionId: string) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [mockQuestions[currentQuestionIndex].id]: optionId,
-    }));
+    console.log('optionId - ', optionId)
+    setCurrentSelectedOption(optionId);
   };
 
   // Move to next question or submit quiz
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < mockQuestions.length - 1) {
-      // Adaptive difficulty adjustment logic
-      const currentQuestion = mockQuestions[currentQuestionIndex];
-      const selectedOptionId = selectedOptions[currentQuestion.id];
+  const handleNextQuestion = async () => {
+    if (currentQuestionIndex < TOTAL_QUESTIONS - 1) {
+      try {
+        const response = await submitAnswer({
+          attemptId,
+          questionId: currentQuestion?._id,
+          answer: parseInt(currentSelectedOption || "0"),
+        });
 
-      // Simple adaptive logic - adjust difficulty based on selection
-      setQuestionDifficulties((prev) => ({
-        ...prev,
-        [currentQuestion.id]: selectedOptionId === "0" ? -1 : 1,
-      }));
+        console.log('submit response - ', response)
 
-      setCurrentQuestionIndex((prev) => prev + 1);
+      } catch(error: any) {
+
+      }
     } else {
       handleQuizSubmit();
     }
@@ -160,13 +194,19 @@ const QuizPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-700">
-                  Please set your grade using settings to continue with the quiz.
+                  Please set your grade using settings to continue with the
+                  quiz.
                 </p>
               </CardContent>
               <CardFooter className="flex justify-end">
-              <Button variant="default" onClick={() => {navigate("/settings")}}>
-                Update Grade
-              </Button>
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    navigate("/settings");
+                  }}
+                >
+                  Update Grade
+                </Button>
               </CardFooter>
             </Card>
           </div>
@@ -176,7 +216,7 @@ const QuizPage: React.FC = () => {
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-4">Quiz Instructions</h1>
             <ul className="text-left max-w-md mx-auto mb-6 space-y-2">
-              <li>• Total Questions: {mockQuestions.length}</li>
+              <li>• Total Questions: {TOTAL_QUESTIONS}</li>
               <li>• Time Limit: 45 minutes</li>
               <li>• Each question has 4 options</li>
               <li>• You cannot go back to previous questions</li>
@@ -193,18 +233,18 @@ const QuizPage: React.FC = () => {
   // Render current question
   return (
     <>
-      <QuizQuestion
-        questionNumber={currentQuestionIndex + 1}
-        totalQuestions={mockQuestions.length}
-        question={mockQuestions[currentQuestionIndex].text}
-        options={mockQuestions[currentQuestionIndex].options}
-        selectedOption={
-          selectedOptions[mockQuestions[currentQuestionIndex].id] || null
-        }
-        onSelectOption={handleOptionSelect}
-        onSubmit={handleNextQuestion}
-        timeRemaining={timeRemaining}
-      />
+      {currentQuestion && (
+        <QuizQuestion
+          questionNumber={currentQuestionIndex + 1}
+          totalQuestions={TOTAL_QUESTIONS}
+          question={currentQuestion.text}
+          options={currentQuestion.options}
+          selectedOption={currentSelectedOption || null}
+          onSelectOption={handleOptionSelect}
+          onSubmit={handleNextQuestion}
+          timeRemaining={timeRemaining}
+        />
+      )}
     </>
   );
 };

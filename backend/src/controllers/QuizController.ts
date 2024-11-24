@@ -38,7 +38,7 @@ export default class QuizController {
       const firstQuestion = await Question.findOne({
         // grade: req.user.grade,
         difficulty: 5,
-      });
+      }).select("-options.isCorrect -__v");
       console.log('firstQuestion - ', firstQuestion)
 
       if (!firstQuestion)
@@ -84,25 +84,41 @@ export default class QuizController {
     req: Request,
     res: ExpressResponse
   ): Promise<ExpressResponse> {
-    const { attemptId, questionId, answer, timeSpent }: AnswerSubmission =
+    let { attemptId, questionId, answer, timeSpent }: AnswerSubmission =
       req.body;
-
+    // console.log('attemptId, questionId, answer, timeSpent - ', attemptId, questionId, answer, timeSpent)
     const attempt = await QuizAttempt.findById(attemptId);
+    // console.log('attempt - ', attempt)
     if (!attempt) throw AppError.notFound("Quiz attempt not found");
 
     const question = await Question.findById(questionId);
+    // console.log('question - ', question)
     if (!question) throw AppError.notFound("Question not found");
 
     const isCorrect = question.options[answer].isCorrect;
+    // console.log('isCorrect - ', isCorrect)
+
+    const questionIndex = attempt.questions.findIndex(
+      (q) => q.questionId.toString() === questionId
+    );
+
+    if (questionIndex == -1) {
+      throw AppError.notFound("Question not found in this attempt");
+    } else {
+      // Update the existing question in the array
+      attempt.questions[questionIndex].userAnswer = answer + 1;
+      attempt.questions[questionIndex].isCorrect = isCorrect;
+      attempt.questions[questionIndex].timeSpent = timeSpent;
+    }
 
     // Update attempt
-    attempt.questions.push({
-      questionId: new mongoose.Types.ObjectId(questionId),
-      userAnswer: answer,
-      isCorrect,
-      timeSpent,
-      difficultyAttempted: question.difficulty,
-    });
+    // attempt.questions.push({
+    //   questionId: new mongoose.Types.ObjectId(questionId),
+    //   userAnswer: answer + 1,
+    //   isCorrect,
+    //   timeSpent,
+    //   difficultyAttempted: question.difficulty,
+    // });
 
     await attempt.save();
 
