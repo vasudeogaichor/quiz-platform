@@ -161,11 +161,11 @@ export default class QuizController {
     // console.log('attempt - ', attempt)
     if (!attempt) throw AppError.notFound("Quiz attempt not found");
 
+    let correctAnswers = (attempt.questions.filter((q) => q.isCorrect).length /
+    attempt.questions.length);
+
     // Calculate final score and topic performance
-    const score =
-      (attempt.questions.filter((q) => q.isCorrect).length /
-        attempt.questions.length) *
-      100;
+    const score = correctAnswers * 100;
 
     const topicPerformance = new Map<
       string,
@@ -203,6 +203,7 @@ export default class QuizController {
     // TODO: Enable timespent calculation after version 1 is deployed
     return res.json(
       Response.success({
+        correctAnswers,
         score,
         topicPerformance: topicScores,
         recommendations,
