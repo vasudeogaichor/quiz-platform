@@ -64,8 +64,8 @@ const QuizQuestion = ({
               </Button>
             ))}
           </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline">Previous</Button>
+          <CardFooter className="flex justify-end">
+            {/* <Button variant="outline">Previous</Button> */}
             <Button 
               onClick={onSubmit}
               disabled={!selectedOption}
