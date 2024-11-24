@@ -3,7 +3,7 @@ import { CATEngine } from "../services/CATEngine";
 import Question from "../models/Question";
 import QuizAttempt from "../models/QuizAttempt";
 import { AppError, Response } from "../core";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { AuthenticatedRequest } from "../types/controllers";
 
 interface AnswerSubmission {
@@ -21,6 +21,7 @@ interface QuizHistory {
 
 export default class QuizController {
   static catEngine = new CATEngine();
+  // console.log('catEngine - ', catEngine)
 
   static async getQuestions(
     req: AuthenticatedRequest,
@@ -30,14 +31,15 @@ export default class QuizController {
     let attempt = await QuizAttempt.findOne({
       user: userId,
       completedAt: null,
-    }).populate("questions.question");
+    }).populate("questions.questionId");
 
     if (!attempt) {
       // Start new quiz
       const firstQuestion = await Question.findOne({
-        grade: req.user.grade,
-        difficulty: 5, // Start with medium difficulty
+        // grade: req.user.grade,
+        difficulty: 5,
       });
+      console.log('firstQuestion - ', firstQuestion)
 
       if (!firstQuestion)
         throw AppError.notFound("No question found to start the quiz.");
@@ -46,7 +48,7 @@ export default class QuizController {
         user: userId,
         questions: [
           {
-            question: firstQuestion._id,
+            questionId: firstQuestion._id,
             difficultyAttempted: firstQuestion.difficulty,
           },
         ],
@@ -61,10 +63,13 @@ export default class QuizController {
     }
 
     // Get next question based on CAT algorithm
-    const nextQuestion = await this.catEngine.selectNextQuestion(
-      attempt.questions,
+    const nextQuestion = await QuizController.catEngine.selectNextQuestion(
+      attempt.questions.map((q) => ({
+        ...q,
+        questionId: q.questionId.toString(),
+      })),
       await Question.find({ grade: req.user.grade }),
-      ["algebra", "geometry"]
+      ["algebra", "geometry", "biology", "physics", "chemistry", "mathematics", "computing"]
     );
 
     return res.json(
@@ -92,7 +97,7 @@ export default class QuizController {
 
     // Update attempt
     attempt.questions.push({
-      question: questionId,
+      questionId: new mongoose.Types.ObjectId(questionId),
       userAnswer: answer,
       isCorrect,
       timeSpent,

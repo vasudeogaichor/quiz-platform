@@ -14,20 +14,20 @@ export const routes: Routes = {
       handler: 'AuthController.googleAuth',
     },
   },
-  // quiz: {
-  //   'GET /questions': {
-  //     handler: 'QuizController.getQuestions',
-  //     middleware: ['auth'],
-  //   },
-  //   'POST /submit-answer': {
-  //     handler: 'QuizController.submitAnswer',
-  //     middleware: ['auth'],
-  //   },
-  //   'POST /complete-quiz': {
-  //     handler: 'QuizController.completeQuiz',
-  //     middleware: ['auth'],
-  //   },
-  // },
+  quiz: {
+    'GET /questions': {
+      handler: 'QuizController.getQuestions',
+      middleware: ['auth'],
+    },
+    'POST /submit-answer': {
+      handler: 'QuizController.submitAnswer',
+      middleware: ['auth'],
+    },
+    // 'POST /complete-quiz': {
+    //   handler: 'QuizController.completeQuiz',
+    //   middleware: ['auth'],
+    // },
+  },
   user: {
     'GET /profile': { 
       handler: 'UserController.getProfile',

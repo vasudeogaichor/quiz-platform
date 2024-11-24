@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IQuestionAttempt {
-  question: mongoose.Types.ObjectId;
+  questionId: mongoose.Types.ObjectId;
   userAnswer: number;
   isCorrect: boolean;
   timeSpent: number;
@@ -28,21 +28,22 @@ const quizAttemptSchema = new Schema<IQuizAttempt>({
     required: true
   },
   questions: [{
-    question: {
+    questionId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Question'
+      ref: 'Question',
+      required: true
     },
     userAnswer: {
       type: Number,
-      required: true
+      // required: true
     },
     isCorrect: {
       type: Boolean,
-      required: true
+      // required: true
     },
     timeSpent: {
       type: Number,
-      required: true
+      // required: true
     },
     difficultyAttempted: {
       type: Number,
@@ -56,12 +57,12 @@ const quizAttemptSchema = new Schema<IQuizAttempt>({
   completedAt: Date,
   score: {
     type: Number,
-    required: true
+    // required: true
   },
   topicPerformance: {
     type: Map,
     of: Number,
-    required: true
+    // required: true
   }
 }, { timestamps: true });
 

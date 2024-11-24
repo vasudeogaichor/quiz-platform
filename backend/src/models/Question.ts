@@ -44,11 +44,11 @@ const questionSchema = new Schema<IQuestion>({
     type: String,
     required: true
   },
-  grade: {
-    type: Number,
-    required: true,
-    enum: [7, 8, 9, 10]
-  },
+  // grade: {
+  //   type: Number,
+  //   required: true,
+  //   enum: [7, 8, 9, 10]
+  // },
   stats: {
     timesAnswered: {
       type: Number,

@@ -1,7 +1,8 @@
 interface UserResponse {
   questionId: string;
   isCorrect: boolean;
-  questionDifficulty: number;
+  // questionDifficulty: number;
+  difficultyAttempted: number
 }
 
 interface Question {
@@ -31,7 +32,7 @@ export class CATEngine {
     const weightedDifficulty =
       responses.reduce((acc, response) => {
         return (
-          acc + response.questionDifficulty * (response.isCorrect ? 1 : -0.5)
+          acc + response.difficultyAttempted * (response.isCorrect ? 1 : -0.5)
         );
       }, 0) / totalAnswers;
 
@@ -55,6 +56,7 @@ export class CATEngine {
     topics: string[]
   ): Promise<Question | null> {
     const currentAbility = this.estimateAbility(userResponses);
+    console.log('currentAbility - ', currentAbility)
 
     // Filter questions not yet answered
     const answeredIds = new Set(userResponses.map((r) => r.questionId));
