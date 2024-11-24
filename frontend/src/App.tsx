@@ -5,7 +5,7 @@ import LoginPage from "./components/auth/LoginForm";
 import Layout from "./layouts/Layout";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import DashboardPage from "./components/dashboard/Dashboard";
-import QuizPage from "./components/quiz/quizPage";
+import QuizPage from "./components/quiz/QuizPage";
 import SettingsPage from "./components/settings/SettingsPage";
 import ResultsPage from "./components/result/ResultPage";
 
