@@ -29,11 +29,16 @@ routeEngine.initialize().then((router) => {
   });
 }).catch((err) => {
   console.error("Error during route initialization:", err);
-});;
+});
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "UP",
+    message: "Server is running successfully",
+    timestamp: new Date().toISOString(),
+  });
+});
 
-
-// Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI || "", {
     // useNewUrlParser: true,
