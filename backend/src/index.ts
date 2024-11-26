@@ -16,20 +16,27 @@ app.use(express.urlencoded({ extended: true }));
 
 const routeEngine = new RouteEngine(routes);
 
-routeEngine.initialize().then((router) => {
-  app.use("/api", router);
+routeEngine
+  .initialize()
+  .then((router) => {
+    app.use("/api", router);
 
-  app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
-    if (err instanceof AppError) {
-      res.status(err.statusCode).json(AppResponse.error(err.message, err.errors));
-    } else {
-      console.error(err);
-      res.status(500).json(AppResponse.error("Internal server error"));
-    }
+    app.use(
+      (err: Error, req: Request, res: Response, next: NextFunction): void => {
+        if (err instanceof AppError) {
+          res
+            .status(err.statusCode)
+            .json(AppResponse.error(err.message, err.errors));
+        } else {
+          console.error(err);
+          res.status(500).json(AppResponse.error("Internal server error"));
+        }
+      }
+    );
+  })
+  .catch((err) => {
+    console.error("Error during route initialization:", err);
   });
-}).catch((err) => {
-  console.error("Error during route initialization:", err);
-});
 
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -39,18 +46,24 @@ app.get("/health", (req, res) => {
   });
 });
 
-mongoose
-  .connect(process.env.MONGODB_URI || "", {
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB");
-    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+// console.log(process.argv);
+// console.log(process.argv[1].includes("/node_modules/.bin/jest"));
+if (!process.argv[1].includes("/node_modules/.bin/jest")) {
+  mongoose
+    .connect(process.env.MONGODB_URI || "", {
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("Connected to MongoDB");
+      const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+      app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+      });
+    })
+    .catch((err) => {
+      console.error("Error connecting to MongoDB:", err);
     });
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-  });
+}
+
+export { app };
