@@ -187,7 +187,9 @@ export default class QuizController {
     // Convert topic performance to percentages
     const topicScores: { [key: string]: number } = {};
     topicPerformance.forEach((stats, topic) => {
-      topicScores[topic] = (stats.correct / stats.total) * 100;
+      topicScores[topic] = parseFloat(
+        ((stats.correct / stats.total) * 100).toFixed(2)
+      );
     });
 
     // Update attempt with final data
