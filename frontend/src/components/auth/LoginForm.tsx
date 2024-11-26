@@ -49,18 +49,18 @@ export default function LoginPage() {
     } else if (!/\S+@\S+\.\S+/.test(loginData.email)) {
       newErrors.email = "Email is invalid.";
     }
-    if (!loginData.password) {
-      newErrors.password = "Password is required.";
-    } else if (loginData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-    } else if (
-      !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(
-        loginData.password
-      )
-    ) {
-      newErrors.password =
-        "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.";
-    }
+    // if (!loginData.password) {
+    //   newErrors.password = "Password is required.";
+    // } else if (loginData.password.length < 6) {
+    //   newErrors.password = "Password must be at least 6 characters.";
+    // } else if (
+    //   !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(
+    //     loginData.password
+    //   )
+    // ) {
+    //   newErrors.password =
+    //     "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.";
+    // }
     return newErrors;
   };
 
