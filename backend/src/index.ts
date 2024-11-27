@@ -38,12 +38,17 @@ routeEngine
     console.error("Error during route initialization:", err);
   });
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "UP",
     message: "Server is running successfully",
     timestamp: new Date().toISOString(),
   });
+});
+
+app.use((req, res, next) => {
+  console.log(`Request Path: ${req.path}`);
+  next();
 });
 
 // console.log(process.argv);
