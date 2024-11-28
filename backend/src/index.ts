@@ -5,6 +5,7 @@ import cors from "cors";
 import { routes } from "./config/routes";
 import { RouteEngine, AppError, Response as AppResponse } from "./core";
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const routeEngine = new RouteEngine(routes);
+
+app.use((req, res, next) => {console.log("path - " +req.path); next(); })
 
 routeEngine
   .initialize()
@@ -38,7 +41,19 @@ routeEngine
     console.error("Error during route initialization:", err);
   });
 
-app.get("/api/health", (req, res) => {
+const frontendPath = path.join(process.cwd(), "../frontend/dist");
+console.log('frontendPath - ', frontendPath)
+// app.use(express.static(frontendPath));
+app.use("/app", express.static(frontendPath));
+app.get("/app/*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(frontendPath, "index.html"));
+// });
+
+app.get("/health", (req, res) => {
   res.status(200).json({
     status: "UP",
     message: "Server is running successfully",
