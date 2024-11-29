@@ -17,7 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 
 const routeEngine = new RouteEngine(routes);
 
-app.use((req, res, next) => {console.log("path - " +req.path); next(); })
+app.use((req, res, next) => {
+  console.log("path - " + req.path);
+  next();
+});
 
 routeEngine
   .initialize()
@@ -42,7 +45,7 @@ routeEngine
   });
 
 const frontendPath = path.join(process.cwd(), "../frontend/dist");
-console.log('frontendPath - ', frontendPath)
+console.log("frontendPath - ", frontendPath);
 // app.use(express.static(frontendPath));
 app.use("/app", express.static(frontendPath));
 app.get("/app/*", (req, res) => {
@@ -68,22 +71,18 @@ app.use((req, res, next) => {
 
 // console.log(process.argv);
 // console.log(process.argv[1].includes("/node_modules/.bin/jest"));
-if (!process.argv[1].includes("/node_modules/.bin/jest")) {
-  mongoose
-    .connect(process.env.MONGODB_URI || "", {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-    })
-    .then(() => {
-      console.log("Connected to MongoDB");
-      const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-      app.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-      });
-    })
-    .catch((err) => {
-      console.error("Error connecting to MongoDB:", err);
+mongoose
+  .connect(process.env.MONGODB_URI || "", {
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to MongoDB");
+    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
     });
-}
-
-export { app };
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
