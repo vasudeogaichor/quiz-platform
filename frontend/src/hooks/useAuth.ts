@@ -70,6 +70,7 @@ export const useAuth = (): AuthHook => {
   }, []);
 
   const login = async (email: string, password: string) => {
+    setIsLoading(true);
     try {
       const response = await loginUser(email, password);
       if (response.success) {
@@ -77,7 +78,7 @@ export const useAuth = (): AuthHook => {
         localStorage.setItem("authToken", token);
         setUser(user);
         setIsAuthenticated(true);
-        setIsLoading(true);
+        // setIsLoading(true);
         navigate("/");
       } else {
         toast({
@@ -94,10 +95,13 @@ export const useAuth = (): AuthHook => {
         description: error.response?.data?.message || "Something went wrong",
       });
       // throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signup = async (signupData: SignupFormData) => {
+    setIsLoading(true);
     try {
       const response = await signupUser(signupData);
       if (response.success) {
@@ -105,7 +109,6 @@ export const useAuth = (): AuthHook => {
         localStorage.setItem("authToken", token);
         setUser(user);
         setIsAuthenticated(true);
-        setIsLoading(true);
         navigate("/");
       } else {
         toast({
@@ -121,6 +124,8 @@ export const useAuth = (): AuthHook => {
         title: "Signup failed",
         description: error?.response?.data?.message || "Something went wrong",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
