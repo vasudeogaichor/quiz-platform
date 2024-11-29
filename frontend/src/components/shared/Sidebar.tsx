@@ -43,7 +43,7 @@ const Sidebar: React.FC = () => {
 
   const handleLogout = () => {
     // Implement logout logic
-    console.log("Logging out");
+    // console.log("Logging out");
     logout();
   };
 

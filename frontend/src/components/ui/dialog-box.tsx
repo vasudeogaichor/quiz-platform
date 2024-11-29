@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
   };
   
   export const DialogBox: React.FC<DialogProps> = ({ trigger }) => {
-    console.log('trigger - ', trigger)
+    // console.log('trigger - ', trigger)
     return (
       <AlertDialog>
         <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>

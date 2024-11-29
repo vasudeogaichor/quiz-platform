@@ -11,7 +11,7 @@ export default function GoogleSignIn() {
   };
 
   const handleError = () => {
-    console.log("Login Failed");
+    // console.log("Login Failed");
     toast({
       variant: "destructive",
       title: "Something went wrong",
