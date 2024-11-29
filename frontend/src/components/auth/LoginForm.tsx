@@ -14,7 +14,7 @@ import GoogleSignIn from "./GoogleSignIn";
 import { LoginFormData, SignupFormData } from "@/types/auth";
 import { useAuth } from "@/hooks/useAuth";
 import { ALLOWED_GRADES } from "@/constants/auth";
-
+import { ButtonLoading } from "../ui/button-loading";
 
 interface Errors {
   email?: string;
@@ -24,7 +24,7 @@ interface Errors {
 }
 
 export default function LoginPage() {
-  const { signup, login } = useAuth();
+  const { isLoading, signup, login } = useAuth();
   const [activeTab, setActiveTab] = useState("login");
   // console.log("activeTab - ", activeTab);
   const [loginData, setLoginData] = useState<LoginFormData>({
@@ -180,13 +180,17 @@ export default function LoginPage() {
                   <p className="text-red-500 text-sm">{errors.password}</p>
                 )}
               </div>
-              <Button
-                type="submit"
-                className="w-full"
-                onClick={handleLoginSubmit}
-              >
-                Login
-              </Button>
+              {isLoading ? (
+                <ButtonLoading loadingText="Logging you in" />
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full"
+                  onClick={handleLoginSubmit}
+                >
+                  Login
+                </Button>
+              )}
               {/* <Button
                 variant="outline"
                 className="w-full"
@@ -244,7 +248,10 @@ export default function LoginPage() {
                 className="w-full p-2 border rounded"
                 value={signupData.grade}
                 onChange={(e) =>
-                  setSignupData({ ...signupData, grade: parseInt(e.target.value) })
+                  setSignupData({
+                    ...signupData,
+                    grade: parseInt(e.target.value),
+                  })
                 }
               >
                 <option value="">Select Grade</option>
@@ -257,9 +264,16 @@ export default function LoginPage() {
               {errors.grade && (
                 <p className="text-red-500 text-sm">{errors.grade}</p>
               )}
-              <Button className="w-full" onClick={handleSignupSubmit}>
-                Sign Up
-              </Button>
+              {isLoading ? (
+                <ButtonLoading
+                  buttonClassString="w-full"
+                  loadingText="Signing you up"
+                />
+              ) : (
+                <Button className="w-full" onClick={handleSignupSubmit}>
+                  Sign Up
+                </Button>
+              )}
             </form>
           </TabsContent>
         </Tabs>

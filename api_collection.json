@@ -1,0 +1,355 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-11-29T18:49:00.966Z",
+  "__export_source": "insomnia.desktop.app:v10.2.0",
+  "resources": [
+    {
+      "_id": "req_742322a22ffe4b0eb755edb908dfcfb9",
+      "parentId": "fld_1ff4ab3aef684639b7f8067b6d17d9b0",
+      "modified": 1732906054107,
+      "created": 1732440236505,
+      "url": "http://localhost:3000/api/quiz/complete-quiz",
+      "name": "/complete-quiz",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"attemptId\": \"6742ecb3d43554f44d65e176\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_eaeaa448d14b46999ee83ffc7b5b6e09"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/10.1.1",
+          "id": "pair_b668925c2e9041afbe8e04091785d79e"
+        },
+        {
+          "id": "pair_e8e4bdbc35f54202a0023a6d1554b46e",
+          "name": "Authorization",
+          "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDJlMDk2OGI4OTc4ZmU1ZTEwNjI1YiIsImdyYWRlIjo3LCJpYXQiOjE3MzI0Mzk4NTcsImV4cCI6MTczMjQ0MzQ1N30.MLkvTIg0vdDuHe0TFCJYfOsPPvK_h4EmhZoy52LO-y0",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1732906050221,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_1ff4ab3aef684639b7f8067b6d17d9b0",
+      "parentId": "wrk_9b298461dba740db8a3509366715e805",
+      "modified": 1732390368665,
+      "created": 1732390368665,
+      "name": "quiz",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1732390368665,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_9b298461dba740db8a3509366715e805",
+      "parentId": null,
+      "modified": 1732031068346,
+      "created": 1732031068346,
+      "name": "Quiz Master",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_9947842d9721446a9dec6a54070af4b8",
+      "parentId": "fld_1ff4ab3aef684639b7f8067b6d17d9b0",
+      "modified": 1732906052179,
+      "created": 1732432129165,
+      "url": "http://localhost:3000/api/quiz/submit-answer",
+      "name": "/submit-answer",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"attemptId\": \"6742ecb3d43554f44d65e176\",\n\t\"questionId\": \"674236b79d44202419b5dfea\",\n\t\"answer\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_eaeaa448d14b46999ee83ffc7b5b6e09"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/10.1.1",
+          "id": "pair_b668925c2e9041afbe8e04091785d79e"
+        },
+        {
+          "id": "pair_e8e4bdbc35f54202a0023a6d1554b46e",
+          "name": "Authorization",
+          "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDJlMDk2OGI4OTc4ZmU1ZTEwNjI1YiIsImdyYWRlIjo3LCJpYXQiOjE3MzI0Mzk4NTcsImV4cCI6MTczMjQ0MzQ1N30.MLkvTIg0vdDuHe0TFCJYfOsPPvK_h4EmhZoy52LO-y0",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1732906050121,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_b15f5c6b12604070a9b020cd42ffc41a",
+      "parentId": "fld_1ff4ab3aef684639b7f8067b6d17d9b0",
+      "modified": 1732906050160,
+      "created": 1732390409941,
+      "url": "http://localhost:3000/api/quiz/questions",
+      "name": "/questions",
+      "description": "",
+      "method": "GET",
+      "body": { "mimeType": "application/json", "text": "" },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_eaeaa448d14b46999ee83ffc7b5b6e09"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/10.1.1",
+          "id": "pair_b668925c2e9041afbe8e04091785d79e"
+        },
+        {
+          "id": "pair_e8e4bdbc35f54202a0023a6d1554b46e",
+          "name": "Authorization",
+          "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDJlMDk2OGI4OTc4ZmU1ZTEwNjI1YiIsImdyYWRlIjo3LCJpYXQiOjE3MzI0Mzk4NTcsImV4cCI6MTczMjQ0MzQ1N30.MLkvTIg0vdDuHe0TFCJYfOsPPvK_h4EmhZoy52LO-y0",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1732906050021,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_bd497d57730b4cb0874c0660ee7486f9",
+      "parentId": "fld_9250322b940a44eb9a809124211d9d91",
+      "modified": 1732203592559,
+      "created": 1732031081326,
+      "url": "http://localhost:3000/api/auth/signup",
+      "name": "auth/signup",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"fullName\": \"Vasudeo Gaichor\",\n\t\"email\": \"test7@gmail.com\",\n\t\"grade\": 7,\n\t\"password\": \"efiwnedG@2019\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "User-Agent", "value": "insomnia/10.1.1" }
+      ],
+      "authentication": {},
+      "metaSortKey": -1732203589477,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_9250322b940a44eb9a809124211d9d91",
+      "parentId": "wrk_9b298461dba740db8a3509366715e805",
+      "modified": 1732203578687,
+      "created": 1732203578687,
+      "name": "auth",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1732203578687,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_e53847e7d2cc4a36933aee52744ecd6b",
+      "parentId": "fld_9250322b940a44eb9a809124211d9d91",
+      "modified": 1732632393912,
+      "created": 1732118505542,
+      "url": "https://vasudeogaichor2024.pythonanywhere.com/api/auth/login",
+      "name": "auth/login",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"email\": \"test7@gmail.com\",\n\t\"password\": \"Gwens223c@2019\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "User-Agent", "value": "insomnia/10.1.1" }
+      ],
+      "authentication": {},
+      "metaSortKey": -1732203589377,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_1f62ebd623bb4e4b90aeec9ba8ee84ab",
+      "parentId": "fld_1998bad3ca604923aebddf65124289a6",
+      "modified": 1732204565700,
+      "created": 1732203612845,
+      "url": "http://localhost:3000/api/user/profile",
+      "name": "profile",
+      "description": "",
+      "method": "GET",
+      "body": { "mimeType": "application/json", "text": "" },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_eaeaa448d14b46999ee83ffc7b5b6e09"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/10.1.1",
+          "id": "pair_b668925c2e9041afbe8e04091785d79e"
+        },
+        {
+          "id": "pair_e8e4bdbc35f54202a0023a6d1554b46e",
+          "name": "Authorization",
+          "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2Y1MzcyZTY4ZDg2OTc0Mzc2N2JjYiIsImlhdCI6MTczMjIwMzM3OCwiZXhwIjoxNzMyMjQ2NTc4fQ.hmY4BLrhGdlksDmg92WavhM9HCyQDLDN0yYF8BN_js4",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1732203589427,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_1998bad3ca604923aebddf65124289a6",
+      "parentId": "wrk_9b298461dba740db8a3509366715e805",
+      "modified": 1732203602278,
+      "created": 1732203602278,
+      "name": "profile",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1728398708894,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_7a6d60efc7a249309a60b4285c8cd3f4",
+      "parentId": "fld_1998bad3ca604923aebddf65124289a6",
+      "modified": 1732240865807,
+      "created": 1732240820856,
+      "url": "http://localhost:3000/api/user/profile",
+      "name": "profile/update",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"fullName\": \"Vasudeo Gaichor 2\",\n\t\"grade\": 10\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_eaeaa448d14b46999ee83ffc7b5b6e09"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/10.1.1",
+          "id": "pair_b668925c2e9041afbe8e04091785d79e"
+        },
+        {
+          "id": "pair_e8e4bdbc35f54202a0023a6d1554b46e",
+          "name": "Authorization",
+          "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2Y1MzcyZTY4ZDg2OTc0Mzc2N2JjYiIsImlhdCI6MTczMjIwMzM3OCwiZXhwIjoxNzMyMjQ2NTc4fQ.hmY4BLrhGdlksDmg92WavhM9HCyQDLDN0yYF8BN_js4",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1732203589402,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "env_2e45af3c8e75316d311c5015909b44bbc99d8659",
+      "parentId": "wrk_9b298461dba740db8a3509366715e805",
+      "modified": 1732031068349,
+      "created": 1732031068349,
+      "name": "Base Environment",
+      "data": {},
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1732031068349,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_2e45af3c8e75316d311c5015909b44bbc99d8659",
+      "parentId": "wrk_9b298461dba740db8a3509366715e805",
+      "modified": 1732031068350,
+      "created": 1732031068350,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    }
+  ]
+}
