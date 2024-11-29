@@ -1,12 +1,15 @@
-import { Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-export function ButtonLoading() {
+export function ButtonLoading(props: {
+  buttonClassString?: string;
+  loadingText?: string;
+}) {
   return (
-    <Button disabled>
+    <Button disabled className={props.buttonClassString}>
       <Loader2 className="animate-spin" />
-      Please wait
+      {props.loadingText ?? "Please wait"}
     </Button>
-  )
+  );
 }
