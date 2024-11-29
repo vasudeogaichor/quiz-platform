@@ -25,7 +25,6 @@ interface Errors {
 
 export default function LoginPage() {
   const { isLoading, signup, login } = useAuth();
-  console.log('isLoading - ', isLoading)
   const [activeTab, setActiveTab] = useState("login");
   // console.log("activeTab - ", activeTab);
   const [loginData, setLoginData] = useState<LoginFormData>({
@@ -182,7 +181,7 @@ export default function LoginPage() {
                 )}
               </div>
               {isLoading ? (
-                <ButtonLoading />
+                <ButtonLoading loadingText="Logging you in" />
               ) : (
                 <Button
                   type="submit"
@@ -265,9 +264,16 @@ export default function LoginPage() {
               {errors.grade && (
                 <p className="text-red-500 text-sm">{errors.grade}</p>
               )}
-              <Button className="w-full" onClick={handleSignupSubmit}>
-                Sign Up
-              </Button>
+              {isLoading ? (
+                <ButtonLoading
+                  buttonClassString="w-full"
+                  loadingText="Signing you up"
+                />
+              ) : (
+                <Button className="w-full" onClick={handleSignupSubmit}>
+                  Sign Up
+                </Button>
+              )}
             </form>
           </TabsContent>
         </Tabs>
