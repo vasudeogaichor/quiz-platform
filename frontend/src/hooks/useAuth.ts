@@ -36,7 +36,6 @@ export const useAuth = (): AuthHook => {
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        // console.log("useauth token - ", token);
 
         if (token) {
           const response = await getUserProfile();
@@ -87,9 +86,14 @@ export const useAuth = (): AuthHook => {
           description: "Something went wrong",
         });
       }
-    } catch (error) {
-      console.error("Login error", error);
-      throw error;
+    } catch (error: any) {
+      // console.error("Login error", error.response.data);
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: error.response?.data?.message || "Something went wrong",
+      });
+      // throw error;
     }
   };
 
@@ -111,11 +115,11 @@ export const useAuth = (): AuthHook => {
         });
         // throw new Error("Signup failed");
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Signup failed",
-        description: "Something went wrong",
+        description: error?.response?.data?.message || "Something went wrong",
       });
     }
   };
@@ -140,11 +144,11 @@ export const useAuth = (): AuthHook => {
         });
         // throw new Error("Signup failed");
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Signup failed",
-        description: "Something went wrong",
+        description: error.response?.data?.message || "Something went wrong",
       });
     }
   };
