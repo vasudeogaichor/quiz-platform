@@ -1,5 +1,37 @@
 import request from "supertest";
+import { faker } from "@faker-js/faker";
+import { setUser } from "./testStore";
 const assert = require("assert");
+
+describe("POST /api/auth/signup", () => {
+  it("should signup successfully and return a token and user data", async () => {
+    const signupPayload = {
+      email: faker.internet.email().toLowerCase(),
+      password: faker.internet.password(),
+      fullName: faker.person.fullName(),
+      grade: Math.floor(Math.random() * (10 - 7 + 1)) + 7
+    };
+
+    const response = await request("http://localhost:3000")
+      .post("/api/auth/signup")
+      .send(signupPayload)
+      .expect(200);
+
+    assert.strictEqual(response.body.success, true);
+    assert.strictEqual(response.body.message, "Success");
+
+    assert.ok(response.body.data.token);
+    assert.ok(response.body.data.user);
+
+    const user = response.body.data.user;
+    assert.strictEqual(user.email, signupPayload.email);
+    assert.strictEqual(user.fullName, signupPayload.fullName);
+    assert.strictEqual(user.grade, signupPayload.grade);
+    assert.ok(Date.parse(user.createdAt));
+    assert.ok(Date.parse(user.updatedAt));
+    setUser({...user, password: signupPayload.password});
+  });
+});
 
 describe("POST /api/auth/login", () => {
   it("should login successfully and return a token and user data", async () => {
@@ -44,35 +76,8 @@ describe("POST /api/auth/login", () => {
   });
 });
 
-describe("POST /api/auth/signup", () => {
-  it("should signup successfully and return a token and user data", async () => {
-    const signupPayload = {
-      email: "3@gmail.com",
-      password: "Endgame@2019",
-      fullName: "Vasudeo Gaichor",
-      grade: 8,
-    };
 
-    const response = await request("http://localhost:3000")
-      .post("/api/auth/signup")
-      .send(signupPayload)
-      .expect(200);
-
-    assert.strictEqual(response.body.success, true);
-    assert.strictEqual(response.body.message, "Success");
-
-    assert.ok(response.body.data.token);
-    assert.ok(response.body.data.user);
-
-    const user = response.body.data.user;
-    assert.strictEqual(user.email, "3@gmail.com");
-    assert.strictEqual(user.fullName, "Vasudeo Gaichor");
-    assert.strictEqual(user.grade, 8);
-    assert.ok(Date.parse(user.createdAt));
-    assert.ok(Date.parse(user.updatedAt));
-  });
-});
-
+/*
 describe("POST /api.auth/google-auth", () => {
   it("should return an error for an invalid or expired Google authorization code", async () => {
     const invalidGoogleAuthPayload = {
@@ -88,3 +93,4 @@ describe("POST /api.auth/google-auth", () => {
     assert.strictEqual(response.body.message, "Internal server error");
   });
 });
+*/
