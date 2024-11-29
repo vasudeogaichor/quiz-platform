@@ -122,7 +122,7 @@ export const useAuth = (): AuthHook => {
       toast({
         variant: "destructive",
         title: "Signup failed",
-        description: error?.response?.data?.message || "Something went wrong",
+        description: error?.response?.data?.errors?.join(", ") || error?.response?.data?.message || "Something went wrong",
       });
     } finally {
       setIsLoading(false);
