@@ -39,7 +39,9 @@ const QuizPage: React.FC = () => {
   // console.log("QuizPage user - ", user, user?.grade);
   const [currentQuestion, setCurrentQuestion] = useState<Question>();
   // console.log("currentQuestion - ", currentQuestion);
-  const [currentSelectedOption, setCurrentSelectedOption] = useState<string | null>();
+  const [currentSelectedOption, setCurrentSelectedOption] = useState<
+    string | null
+  >();
   // console.log("currentSelectedOption - ", currentSelectedOption);
 
   // Quiz state management
@@ -47,6 +49,7 @@ const QuizPage: React.FC = () => {
   // console.log('currentQuestionIndex - ', currentQuestionIndex)
   const [timeRemaining, setTimeRemaining] = useState(45 * 60); // 45 minutes total
   const [quizStarted, setQuizStarted] = useState(false);
+  const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
 
   useEffect(() => {
     if (currentQuestion) {
@@ -99,6 +102,7 @@ const QuizPage: React.FC = () => {
   const handleNextQuestion = async () => {
     if (currentQuestionIndex < TOTAL_QUESTIONS - 1) {
       try {
+        setNextButtonDisabled(true);
         await submitAnswer({
           attemptId,
           questionId: currentQuestion?._id,
@@ -110,30 +114,33 @@ const QuizPage: React.FC = () => {
         const nextQuestion = await getQuestion();
         // console.log('nextQuestion - ', nextQuestion)
         if (nextQuestion.success) {
-           setCurrentQuestion(nextQuestion.data.question);
-           setCurrentQuestionIndex(currentQuestionIndex + 1);
-           setCurrentSelectedOption(null);
+          setCurrentQuestion(nextQuestion.data.question);
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setCurrentSelectedOption(null);
         } else {
           toast({
             variant: "destructive",
             title: "Something went wrong",
           });
-          navigate("/")
+          navigate("/");
         }
       } catch (error: any) {
         toast({
           variant: "destructive",
           title: "Something went wrong",
         });
-        navigate("/")
+        navigate("/");
+      } finally {
+        setNextButtonDisabled(false);
       }
     } else {
-        handleQuizSubmit(attemptId);
+      handleQuizSubmit(attemptId);
     }
   };
 
   // Submit quiz and navigate to results
   const handleQuizSubmit = async (attemptId: string | undefined) => {
+    setNextButtonDisabled(true);
     try {
       const response = await completeQuiz(attemptId || "");
       // console.log('handleQuizSubmit response - ', response)
@@ -153,14 +160,16 @@ const QuizPage: React.FC = () => {
           variant: "destructive",
           title: "Something went wrong",
         });
-        navigate("/")
+        navigate("/");
       }
-    } catch(error) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Something went wrong",
       });
       navigate("/");
+    } finally {
+      setNextButtonDisabled(false);
     }
   };
 
@@ -225,6 +234,7 @@ const QuizPage: React.FC = () => {
           onSelectOption={handleOptionSelect}
           onSubmit={handleNextQuestion}
           timeRemaining={timeRemaining}
+          nextButtonDisabled={nextButtonDisabled}
         />
       )}
     </>

@@ -16,6 +16,7 @@ interface QuestionProps {
   onSelectOption: (optionId: string) => void;
   onSubmit: () => void;
   timeRemaining: number;
+  nextButtonDisabled: boolean
 }
 
 const QuizQuestion = ({
@@ -26,7 +27,8 @@ const QuizQuestion = ({
   selectedOption,
   onSelectOption,
   onSubmit,
-  timeRemaining
+  timeRemaining,
+  nextButtonDisabled = false
 }: QuestionProps) => {
   return (
     <div className="min-h-screen p-6 bg-gray-50">
@@ -68,7 +70,7 @@ const QuizQuestion = ({
             {/* <Button variant="outline">Previous</Button> */}
             <Button 
               onClick={onSubmit}
-              disabled={!selectedOption}
+              disabled={!selectedOption || nextButtonDisabled}
             >
               {questionNumber === totalQuestions ? 'Submit Quiz' : 'Next Question'}
             </Button>
