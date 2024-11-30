@@ -15,7 +15,7 @@ export const toUserDTO = (user: any): UserDTO => {
 
 export function generateAuthToken(
   user: IUser,
-  expiresIn: string | number = "1h"
+  expiresIn: string | number = "12h"
 ): string {
   return jwt.sign(
     { id: user._id, grade: user.grade },
