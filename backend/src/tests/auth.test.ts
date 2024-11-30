@@ -1,6 +1,6 @@
 import request from "supertest";
 import { faker } from "@faker-js/faker";
-import { setUser } from "./testStore";
+import { getUser, setToken, setUser } from "./testStore";
 const assert = require("assert");
 
 describe("POST /api/auth/signup", () => {
@@ -16,11 +16,11 @@ describe("POST /api/auth/signup", () => {
       .post("/api/auth/signup")
       .send(signupPayload)
       .expect(200);
-
     assert.strictEqual(response.body.success, true);
     assert.strictEqual(response.body.message, "Success");
 
     assert.ok(response.body.data.token);
+    setToken(response.body.data.token);
     assert.ok(response.body.data.user);
 
     const user = response.body.data.user;
@@ -35,9 +35,10 @@ describe("POST /api/auth/signup", () => {
 
 describe("POST /api/auth/login", () => {
   it("should login successfully and return a token and user data", async () => {
+    const testUser = getUser();
     const loginPayload = {
-      email: "2@gmail.com",
-      password: "Endgame@2019",
+      email: testUser?.email,
+      password: testUser?.password,
     };
 
     const response = await request("http://localhost:3000")
@@ -52,9 +53,9 @@ describe("POST /api/auth/login", () => {
     assert.ok(response.body.data.user);
 
     const user = response.body.data.user;
-    assert.strictEqual(user.email, "2@gmail.com");
-    assert.strictEqual(user.fullName, "Vasudeo Gaichor");
-    assert.strictEqual(user.grade, 8);
+    assert.strictEqual(user.email, loginPayload.email);
+    assert.strictEqual(user.fullName, testUser?.fullName);
+    assert.strictEqual(user.grade, testUser?.grade);
     assert.ok(Date.parse(user.createdAt));
     assert.ok(Date.parse(user.updatedAt));
   });

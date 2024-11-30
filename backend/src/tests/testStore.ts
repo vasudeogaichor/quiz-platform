@@ -14,5 +14,8 @@ export const getToken = () => {
 
 export const setUser = (newUser: Partial<IUser>) => {
     user = newUser;
-    console.log('user - ', user);
+};
+
+export const getUser = () => {
+  return user;
 };
