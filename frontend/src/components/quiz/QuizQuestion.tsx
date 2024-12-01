@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 interface Option {
   id: string;
   text: string;
+  char?: string;
 }
 
 interface QuestionProps {
@@ -19,6 +20,8 @@ interface QuestionProps {
   nextButtonDisabled: boolean
 }
 
+const OPTION_CHARS = ["A", "B", "C", "D"];
+
 const QuizQuestion = ({
   questionNumber,
   totalQuestions,
@@ -30,6 +33,10 @@ const QuizQuestion = ({
   timeRemaining,
   nextButtonDisabled = false
 }: QuestionProps) => {
+  options = options.map((option, index) => ({...option, char: OPTION_CHARS[index]}))
+  // console.log('options - ', options)
+
+  
   return (
     <div className="min-h-screen p-6 bg-gray-50">
       <div className="max-w-3xl mx-auto">
@@ -59,7 +66,7 @@ const QuizQuestion = ({
               >
                 <div className="flex items-center">
                   <span className="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4">
-                    {String.fromCharCode(65 + parseInt(option.id))}
+                    {option.char}
                   </span>
                   <span>{option.text}</span>
                 </div>

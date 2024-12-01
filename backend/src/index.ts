@@ -45,7 +45,7 @@ routeEngine
   });
 
 const frontendPath = path.join(process.cwd(), "../frontend/dist");
-console.log("frontendPath - ", frontendPath);
+// console.log("frontendPath - ", frontendPath);
 // app.use(express.static(frontendPath));
 app.use("/app", express.static(frontendPath));
 app.get("/app/*", (req, res) => {
