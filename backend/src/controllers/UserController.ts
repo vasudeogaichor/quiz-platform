@@ -98,7 +98,7 @@ export default class UserController {
       };
     }
 
-    return Response.success({
+    return res.json(Response.success({
       user,
       stats: quizStats[0] || {
         totalQuizzes: 0,
@@ -111,7 +111,7 @@ export default class UserController {
         acc[topic._id] = topic.averageScore;
         return acc;
       }, {}),
-    });
+    }));
   }
 
   static async updateProfile(
@@ -135,7 +135,7 @@ export default class UserController {
       runValidators: true,
     }).select("-password -googleId");
 
-    return Response.success(user);
+    return res.json(Response.success(user));
   }
 
   // static async getPerformanceAnalytics(req: AuthenticatedRequest, res: ExpressResponse): Promise<Response> {
